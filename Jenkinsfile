@@ -6,11 +6,14 @@ pipeline {
         IMAGE_NAME      = 'pharm-frontend'
         NETWORK_NAME    = 'pharmeasy-network'
         PORT_MAPPING    = '4202:80'
-        // Disable BuildKit so the legacy builder uses locally cached base images
-        // without contacting auth.docker.io on every build (Sophos proxy blocks it).
-        // Prerequisite: pull node:22-alpine and nginx:alpine once with Docker Desktop
-        // proxy configured (Settings → Resources → Proxies).
+        // Disable BuildKit: legacy builder uses locally cached base images without
+        // contacting auth.docker.io on every build (Sophos proxy blocks that endpoint).
         DOCKER_BUILDKIT = '0'
+        // Docker Desktop exposes the corporate proxy on this hostname from inside containers.
+        // These are forwarded as --build-arg so npm ci can reach registry.npmjs.org.
+        HTTP_PROXY      = 'http://http.docker.internal:3128'
+        HTTPS_PROXY     = 'http://http.docker.internal:3128'
+        NO_PROXY        = 'localhost,127.0.0.1,hubproxy.docker.internal'
     }
 
     stages {
