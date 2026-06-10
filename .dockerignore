@@ -1,3 +1,4 @@
-﻿node_modules/
-dist/
+node_modules/
 .angular/
+# dist/ is intentionally NOT ignored — it is built on the Jenkins host
+# and copied into the nginx image by the Dockerfile.

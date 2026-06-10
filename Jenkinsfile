@@ -9,12 +9,6 @@ pipeline {
         // Legacy builder avoids contacting auth.docker.io on every build
         // (Sophos proxy blocks that endpoint on the corporate network).
         DOCKER_BUILDKIT = '0'
-        // Docker Desktop exposes the corporate proxy on this hostname from
-        // inside containers — forwarded as --build-arg so npm ci can reach
-        // registry.npmjs.org through the Sophos SSL inspection proxy.
-        HTTP_PROXY      = 'http://http.docker.internal:3128'
-        HTTPS_PROXY     = 'http://http.docker.internal:3128'
-        NO_PROXY        = 'localhost,127.0.0.1,hubproxy.docker.internal'
     }
 
     stages {
@@ -25,23 +19,37 @@ pipeline {
             }
         }
 
+        // ── Install & Build on the Jenkins host ──────────────────────────────
+        // npm is run on the Windows host where Sophos CA is already trusted by
+        // the OS certificate store.  This avoids the "Exit handler never called"
+        // crash that happens when npm makes hundreds of parallel HTTPS connections
+        // through Sophos SSL inspection inside an Alpine Docker container.
+        stage('Install Dependencies') {
+            steps {
+                bat 'npm install --no-audit --no-fund'
+            }
+        }
+
+        stage('Build Angular App') {
+            steps {
+                bat 'npm run build'
+            }
+        }
+
+        // ── Pull base images ─────────────────────────────────────────────────
         stage('Pull Base Images') {
             steps {
                 script {
-                    bat "docker pull node:22-alpine 2>nul || echo WARN: could not pull node:22-alpine, using local cache"
-                    bat "docker pull nginx:alpine   2>nul || echo WARN: could not pull nginx:alpine, using local cache"
+                    bat "docker pull nginx:alpine 2>nul || echo WARN: could not pull nginx:alpine, using local cache"
                 }
             }
         }
 
+        // ── Package pre-built dist/ into nginx image ─────────────────────────
         stage('Build Docker Image') {
             steps {
                 script {
-                    def proxyArgs  = " --build-arg HTTP_PROXY=${env.HTTP_PROXY}"
-                    proxyArgs     += " --build-arg HTTPS_PROXY=${env.HTTPS_PROXY}"
-                    proxyArgs     += " --build-arg NO_PROXY=${env.NO_PROXY}"
-
-                    bat "docker build --no-cache ${proxyArgs} -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
+                    bat "docker build --no-cache -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
                 }
             }
         }
