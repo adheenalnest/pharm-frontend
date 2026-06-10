@@ -5,7 +5,7 @@ pipeline {
         CONTAINER_NAME = 'pharm-frontend-ui'
         IMAGE_NAME     = 'pharm-frontend'
         NETWORK_NAME   = 'pharmeasy-network'
-        PORT_MAPPING   = '4201:80'
+        PORT_MAPPING   = '4202:80'
     }
 
     stages {
@@ -28,7 +28,7 @@ pipeline {
                     // Ensure shared Docker network exists
                     bat "docker network create ${NETWORK_NAME} 2>nul || ver >nul"
 
-                    // Stop and remove any existing container gracefully
+                    // Stop and remove the named container if it already exists
                     bat "docker stop ${CONTAINER_NAME} 2>nul || ver >nul"
                     bat "docker rm   ${CONTAINER_NAME} 2>nul || ver >nul"
 
@@ -57,7 +57,7 @@ pipeline {
                     if (!status.contains('true')) {
                         error "Container ${CONTAINER_NAME} failed to start. Check docker logs."
                     }
-                    echo "Container is healthy and running on port 4200."
+                    echo "Container is healthy and running on port 4202."
                 }
             }
         }
@@ -65,7 +65,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ pharm-frontend pipeline completed successfully! App is live at http://localhost:4201"
+            echo "✅ pharm-frontend pipeline completed successfully! App is live at http://localhost:4202"
         }
         failure {
             echo "❌ pharm-frontend pipeline failed. Check the logs above for details."
