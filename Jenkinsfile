@@ -18,12 +18,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Pull Base Images') {
             steps {
                 script {
