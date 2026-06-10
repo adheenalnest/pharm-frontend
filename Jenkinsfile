@@ -2,10 +2,15 @@ pipeline {
     agent any
 
     environment {
-        CONTAINER_NAME = 'pharm-frontend-ui'
-        IMAGE_NAME     = 'pharm-frontend'
-        NETWORK_NAME   = 'pharmeasy-network'
-        PORT_MAPPING   = '4202:80'
+        CONTAINER_NAME  = 'pharm-frontend-ui'
+        IMAGE_NAME      = 'pharm-frontend'
+        NETWORK_NAME    = 'pharmeasy-network'
+        PORT_MAPPING    = '4202:80'
+        // Disable BuildKit so the legacy builder uses locally cached base images
+        // without contacting auth.docker.io on every build (Sophos proxy blocks it).
+        // Prerequisite: pull node:22-alpine and nginx:alpine once with Docker Desktop
+        // proxy configured (Settings → Resources → Proxies).
+        DOCKER_BUILDKIT = '0'
     }
 
     stages {
@@ -13,6 +18,19 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Pull Base Images') {
+            steps {
+                script {
+                    // Try to refresh base images from Docker Hub.
+                    // If the pull fails (e.g. network unavailable), the build falls back
+                    // to whatever is already cached locally — the legacy builder won't re-check
+                    // the registry as long as DOCKER_BUILDKIT=0.
+                    bat "docker pull node:22-alpine 2>nul || echo WARN: could not pull node:22-alpine, using local cache"
+                    bat "docker pull nginx:alpine   2>nul || echo WARN: could not pull nginx:alpine, using local cache"
+                }
             }
         }
 
