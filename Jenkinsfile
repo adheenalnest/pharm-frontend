@@ -18,7 +18,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build --no-cache -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
+                script {
+                    // Forward host proxy settings into the Docker build so npm can reach registry.npmjs.org
+                    def proxyArgs = ''
+                    if (env.HTTP_PROXY)  proxyArgs += " --build-arg HTTP_PROXY=${env.HTTP_PROXY}"
+                    if (env.HTTPS_PROXY) proxyArgs += " --build-arg HTTPS_PROXY=${env.HTTPS_PROXY}"
+                    if (env.NO_PROXY)    proxyArgs += " --build-arg NO_PROXY=${env.NO_PROXY}"
+
+                    bat "docker build --no-cache ${proxyArgs} -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
+                }
             }
         }
 
