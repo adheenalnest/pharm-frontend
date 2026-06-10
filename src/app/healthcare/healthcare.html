@@ -1,0 +1,268 @@
+<div class="hc-page">
+
+  <!-- Breadcrumb -->
+  <div class="hc-breadcrumb">
+    <a routerLink="/" class="hc-bc-link">Home</a>
+    <span class="hc-bc-sep">&#8250;</span>
+    <span class="hc-bc-current">Healthcare</span>
+  </div>
+
+  <!-- Banner section: left main carousel + right secondary banner -->
+  <div class="hc-banner-wrap">
+
+    <!-- Left: Main Carousel -->
+    <div class="hc-carousel">
+      <button class="hc-carousel-btn hc-prev" (click)="prevSlide()">&#8249;</button>
+
+      <div class="hc-slides-track">
+        @for (slide of slides; track $index) {
+          <img
+            [src]="slide.img"
+            [alt]="slide.alt"
+            class="hc-slide-img"
+            [class.hc-slide-active]="$index === currentSlide"
+          >
+        }
+      </div>
+
+      <button class="hc-carousel-btn hc-next" (click)="nextSlide()">&#8250;</button>
+
+      <div class="hc-dots">
+        @for (slide of slides; track $index) {
+          <button
+            class="hc-dot"
+            [class.hc-dot-active]="$index === currentSlide"
+            (click)="goToSlide($index)"
+          ></button>
+        }
+      </div>
+    </div>
+
+    <!-- Right: Secondary banner (next slide preview) -->
+    <div class="hc-secondary-banner">
+      <button class="hc-carousel-btn hc-next hc-sec-next" (click)="nextSlide()">&#8250;</button>
+
+      <div class="hc-slides-track">
+        @for (slide of slides; track $index) {
+          <img
+            [src]="slide.img"
+            [alt]="slide.alt"
+            class="hc-slide-img"
+            [class.hc-slide-active]="$index === nextSlideIndex"
+          >
+        }
+      </div>
+
+      <div class="hc-sec-footer">
+        Now earn <span class="hc-sec-credits">6%</span> Pharmeasy Credits
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Category grid -->
+  <div class="hc-cats-section">
+    <h2 class="hc-cats-heading">Shop by Category</h2>
+
+    @if (catsLoading) {
+      <div class="hc-cats-grid">
+        @for (s of [1,2,3,4,5,6,7,8,9]; track s) {
+          <div class="hc-cat-card hc-cat-skel">
+            <div class="hc-cat-img-wrap skel-pulse"></div>
+            <div class="hc-cat-skel-name skel-pulse"></div>
+          </div>
+        }
+      </div>
+    } @else if (categories.length === 0) {
+      <p class="hc-cats-empty">No categories found.</p>
+    } @else {
+      <div class="hc-cats-grid">
+        @for (cat of categories; track cat.id) {
+          <a [routerLink]="['/healthcare', cat.id]" class="hc-cat-card">
+            <div class="hc-cat-img-wrap">
+              @if (cat.image) {
+                <img [src]="cat.image" [alt]="cat.categoryName" class="hc-cat-real-img"
+                  (error)="$any($event.target).style.display='none'" />
+              } @else {
+                <span class="hc-cat-initial">{{ catInitial(cat.categoryName) }}</span>
+              }
+            </div>
+            <span class="hc-cat-name">{{ cat.categoryName }}</span>
+          </a>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ── API Product Sections ── -->
+
+  <!-- Healthcare Highlights -->
+  @if (healthcareData.length > 0) {
+    <div class="hc-section">
+      <div class="hc-section-header">
+        <h2 class="hc-section-title">Healthcare Highlights</h2>
+        <a routerLink="/healthcare/must-haves" class="hc-section-link">View All</a>
+      </div>
+      <div class="hc-products-row">
+        @for (item of healthcareData; track item.id) {
+          <div class="hc-prod-card">
+            @if (item.image) {
+              <img [src]="item.image" [alt]="item.title" class="hc-prod-img hc-prod-img-real"
+                (error)="$any($event.target).style.display='none'" />
+            } @else {
+              <div class="hc-prod-img hc-prod-img-placeholder">🏥</div>
+            }
+            <div class="hc-prod-info">
+              <p class="hc-prod-name">{{ item.title }}</p>
+              @if (item.dis) {
+                <p class="hc-prod-desc">{{ item.dis }}</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Health Food & Drinks -->
+  @if (healthFoodDrinks.length > 0) {
+    <div class="hc-section">
+      <div class="hc-section-header">
+        <h2 class="hc-section-title">Health Food &amp; Drinks</h2>
+        <a routerLink="/healthcare/health-food-and-drinks" class="hc-section-link">View All</a>
+      </div>
+      <div class="hc-products-row">
+        @for (item of healthFoodDrinks; track item.id) {
+          <div class="hc-prod-card">
+            @if (item.image) {
+              <img [src]="item.image" [alt]="item.title" class="hc-prod-img hc-prod-img-real"
+                (error)="$any($event.target).style.display='none'" />
+            } @else {
+              <div class="hc-prod-img hc-prod-img-placeholder">🥤</div>
+            }
+            <div class="hc-prod-info">
+              <p class="hc-prod-name">{{ item.title }}</p>
+              <p class="hc-prod-price">&#8377;{{ item.price }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Healthcare Devices -->
+  @if (healthcareDevices.length > 0) {
+    <div class="hc-section">
+      <div class="hc-section-header">
+        <h2 class="hc-section-title">Healthcare Devices</h2>
+        <a routerLink="/healthcare/mobility-elderly-care" class="hc-section-link">View All</a>
+      </div>
+      <div class="hc-products-row">
+        @for (item of healthcareDevices; track item.id) {
+          <div class="hc-prod-card">
+            @if (item.image) {
+              <img [src]="item.image" [alt]="item.title" class="hc-prod-img hc-prod-img-real"
+                (error)="$any($event.target).style.display='none'" />
+            } @else {
+              <div class="hc-prod-img hc-prod-img-placeholder">🩺</div>
+            }
+            <div class="hc-prod-info">
+              <p class="hc-prod-name">{{ item.title }}</p>
+              <p class="hc-prod-price">&#8377;{{ item.price }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Skincare -->
+  @if (skincares.length > 0) {
+    <div class="hc-section">
+      <div class="hc-section-header">
+        <h2 class="hc-section-title">Skincare</h2>
+        <a routerLink="/healthcare/personal-care" class="hc-section-link">View All</a>
+      </div>
+      <div class="hc-products-row">
+        @for (item of skincares; track item.id) {
+          <div class="hc-prod-card">
+            @if (item.image) {
+              <img [src]="item.image" [alt]="item.title" class="hc-prod-img hc-prod-img-real"
+                (error)="$any($event.target).style.display='none'" />
+            } @else {
+              <div class="hc-prod-img hc-prod-img-placeholder">✨</div>
+            }
+            <div class="hc-prod-info">
+              <p class="hc-prod-name">{{ item.title }}</p>
+              <p class="hc-prod-price">&#8377;{{ item.price }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Skeleton while loading sections -->
+  @if (sectionsLoading) {
+    <div class="hc-section">
+      <div class="hc-skel-title skel-pulse" style="width:180px;height:20px;border-radius:8px;margin-bottom:16px"></div>
+      <div class="hc-products-row">
+        @for (s of [1,2,3,4,5,6]; track s) {
+          <div class="hc-prod-card hc-prod-skel">
+            <div class="hc-prod-img skel-pulse"></div>
+            <div style="padding:10px">
+              <div class="skel-pulse" style="height:11px;border-radius:6px;margin-bottom:6px"></div>
+              <div class="skel-pulse" style="height:10px;border-radius:6px;width:50%"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- SEO text section -->
+  <div class="hc-seo">
+
+    <h2 class="hc-seo-h2">Shop Safely And Worry-Free On PharmEasy</h2>
+    <p class="hc-seo-p">PharmEasy is a renowned name in the online shopping of Over The Counter or healthcare products and other daily essentials. Ordering online on PharmEasy is convenient, fast and hassle-free; you can avoid the annoyance of queuing up at your local pharmacy and also avail of huge discounts of up to 80% OFF. Purchasing the healthcare requirements such as medical devices and nutritional supplements that you need will no longer burn a hole in your pocket. At PharmEasy, you are sure to find everything that you need because we have products across all healthcare categories.</p>
+
+    <h3 class="hc-seo-h3">Why choose PharmEasy?</h3>
+    <ul class="hc-seo-list">
+      <li>8400+ Brands</li>
+      <li>35K products in our stock</li>
+      <li>Delivery to 22000+ pin codes</li>
+      <li>Delivered to 50 lakh+ families</li>
+      <li>Over 2M customers served</li>
+    </ul>
+
+    <h3 class="hc-seo-h3">Our most popular categories:</h3>
+    <p class="hc-seo-p">We have a range of categories and products, some which are:</p>
+
+    <h4 class="hc-seo-h4">Personal care</h4>
+    <p class="hc-seo-p">Personal care products can include a wide range of products such as Bath products, Skincare essentials, Razor blades, Toothpaste and toothbrush, Wet wipes, Lip balm, Face masks, Hand sanitizer, etc.</p>
+
+    <h4 class="hc-seo-h4">Nutrition and fitness supplements</h4>
+    <p class="hc-seo-p">To give your health a helping hand, you can order a wide variety of health supplements including Health drinks, Nutritional powder, Nutrition tablets/capsules.</p>
+
+    <h4 class="hc-seo-h4">Ayurvedic care</h4>
+    <p class="hc-seo-p">Place your trust in the goodness of natural and organic ayurvedic products for an all-around healthy mind and body. There&#x27;s plenty to choose from such as Aloe vera juice, Moringa capsules, Garlic capsules.</p>
+
+    <h4 class="hc-seo-h4">Home care</h4>
+    <p class="hc-seo-p">Home care products are things you need every day such as disinfectant spray, phenyl, dishwashing liquid, etc. Get them all at spectacular discounts on PharmEasy.</p>
+
+    <h4 class="hc-seo-h4">Baby and mom care</h4>
+    <p class="hc-seo-p">PharmEasy also has an impressive range of baby and mom care products including Diapers, Baby bath products, Infant formula food, Mother&#x27;s health drinks, Diaper rash creams, Baby wipes.</p>
+
+    <h3 class="hc-seo-h3">Our top brands:</h3>
+    <div class="hc-brands-row">
+      <span class="hc-brand-chip">Everherb</span>
+      <span class="hc-brand-chip">Liveasy</span>
+      <span class="hc-brand-chip">Pharmeasy</span>
+      <span class="hc-brand-chip">Himalaya</span>
+      <span class="hc-brand-chip">Dabur</span>
+      <span class="hc-brand-chip">Patanjali</span>
+    </div>
+
+  </div>
+
+</div>

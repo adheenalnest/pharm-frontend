@@ -1,0 +1,284 @@
+<div class="db-page">
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="db-loading">
+      <div class="db-spinner"></div>
+      <p>Loading doctor details...</p>
+    </div>
+  } @else if (error) {
+    <div class="db-error-state">
+      <p>{{ error }}</p>
+      <button class="db-back-btn" (click)="goBack()">← Back to Doctors</button>
+    </div>
+  } @else if (!doctor) {
+    <div class="db-error-state">
+      <p>Doctor not found.</p>
+      <button class="db-back-btn" (click)="goBack()">← Back to Doctors</button>
+    </div>
+  } @else {
+
+  <!-- ── Consultation Summary (dark header) ── -->
+  <div class="db-summary-header">
+    <div class="db-summary-inner">
+      <button class="db-back-link" (click)="goBack()">← Back</button>
+      <h2 class="db-summary-title">Consultation Summary</h2>
+      <div class="db-doc-card">
+        @if (doctor?.image) {
+          <img [src]="doctor.image" class="db-doc-avatar-img" alt="Dr" (error)="doctor.image = null" />
+        } @else {
+          <div class="db-doc-avatar">🩺</div>
+        }
+        <div class="db-doc-details">
+          <p class="db-doc-name">{{ doctor?.name }}</p>
+          <p class="db-doc-specialty">{{ doctor?.specialisation }}</p>
+          <p class="db-doc-meta">{{ doctor?.experience }} years Exp &bull; {{ doctor?.qualification }}</p>
+          <p class="db-doc-fee">Consultation Fee: ₹{{ doctor?.consultationFee | number:'1.0-0' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slots loading indicator ── -->
+  @if (slotsLoading) {
+    <div class="db-slots-loading">
+      <div class="db-mini-spin"></div>
+      <span>Loading available slots...</span>
+    </div>
+  }
+
+  <!-- ── Main body ── -->
+  <div class="db-body">
+
+    <!-- Slot picker -->
+    <section class="db-section">
+      <h3 class="db-section-title">Select your preferred slot</h3>
+
+      <!-- Date row -->
+      <div class="db-date-row">
+        <span class="db-month-label">{{ currentMonth }}</span>
+        @for (d of dates; track $index; let i = $index) {
+          <button
+            class="db-date-chip"
+            [class.db-date-active]="selectedDateIdx === i"
+            (click)="selectDate(i)"
+          >
+            <span class="db-date-day">{{ d.day }}</span>
+            <span class="db-date-num">{{ d.date }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- No slots message -->
+      @if (!slotsLoading && totalSlots === 0) {
+        <div class="db-no-slots">
+          <p>No available slots for this day.</p>
+          <p class="db-no-slots-sub">Please select a different date.</p>
+        </div>
+      }
+
+      <!-- Morning -->
+      @if (morningSlots.length > 0) {
+      <div class="db-period-block">
+        <button class="db-period-header" (click)="showMorning = !showMorning">
+          <div class="db-period-left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" d="M12 3v1m0 16v1m8.66-13l-.87.5M4.21 15.5l-.87.5M19.79 15.5l-.87-.5M4.21 8.5l-.87-.5M21 12h-1M4 12H3M16.24 7.76l-.71.71M8.47 15.53l-.71.71M16.24 16.24l-.71-.71M8.47 8.47l-.71-.71"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <span>Morning</span>
+            <span class="db-slots-count">{{ morningSlots.length }} slots</span>
+          </div>
+          <svg class="db-chevron" [class.db-chevron-up]="showMorning" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        @if (showMorning) {
+          <div class="db-slots-grid">
+            @for (slot of morningSlots; track slot.value) {
+              <button class="db-slot-btn" [class.db-slot-active]="selectedSlot?.value === slot.value" (click)="selectedSlot = slot">
+                {{ slot.display }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+      }
+
+      <!-- Afternoon -->
+      @if (afternoonSlots.length > 0) {
+      <div class="db-period-block">
+        <button class="db-period-header" (click)="showAfternoon = !showAfternoon">
+          <div class="db-period-left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <span>Afternoon</span>
+            <span class="db-slots-count">{{ afternoonSlots.length }} slots</span>
+          </div>
+          <svg class="db-chevron" [class.db-chevron-up]="showAfternoon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        @if (showAfternoon) {
+          <div class="db-slots-grid">
+            @for (slot of afternoonSlots; track slot.value) {
+              <button class="db-slot-btn" [class.db-slot-active]="selectedSlot?.value === slot.value" (click)="selectedSlot = slot">
+                {{ slot.display }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+      }
+
+      <!-- Evening -->
+      @if (eveningSlots.length > 0) {
+      <div class="db-period-block">
+        <button class="db-period-header" (click)="showEvening = !showEvening">
+          <div class="db-period-left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+            </svg>
+            <span>Evening</span>
+            <span class="db-slots-count">{{ eveningSlots.length }} slots</span>
+          </div>
+          <svg class="db-chevron" [class.db-chevron-up]="showEvening" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        @if (showEvening) {
+          <div class="db-slots-grid">
+            @for (slot of eveningSlots; track slot.value) {
+              <button class="db-slot-btn" [class.db-slot-active]="selectedSlot?.value === slot.value" (click)="selectedSlot = slot">
+                {{ slot.display }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+      }
+
+      <!-- Night -->
+      @if (nightSlots.length > 0) {
+      <div class="db-period-block">
+        <button class="db-period-header" (click)="showNight = !showNight">
+          <div class="db-period-left">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+            <span>Night</span>
+            <span class="db-slots-count">{{ nightSlots.length }} slots</span>
+          </div>
+          <svg class="db-chevron" [class.db-chevron-up]="showNight" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        @if (showNight) {
+          <div class="db-slots-grid">
+            @for (slot of nightSlots; track slot.value) {
+              <button class="db-slot-btn" [class.db-slot-active]="selectedSlot?.value === slot.value" (click)="selectedSlot = slot">
+                {{ slot.display }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+      }
+
+    </section>
+
+    <!-- Patient Details -->
+    <section class="db-patient-section">
+      <h3 class="db-section-title">Patient Details</h3>
+      <p class="db-patient-sub">You can add &amp; edit patient details after booking also</p>
+
+      <div class="db-form">
+        <input class="db-input db-input-full" type="text" placeholder="Patient Name *" [(ngModel)]="patientName">
+
+        <div class="db-input-row">
+          <input class="db-input" type="tel" placeholder="Contact Number *" [(ngModel)]="contactNumber">
+          <input class="db-input db-input-sm" type="number" placeholder="Age" [(ngModel)]="age">
+        </div>
+
+        <div class="db-gender-row">
+          <label class="db-gender-label">Gender</label>
+          <div class="db-gender-btns">
+            @for (g of ['Male','Female','Other']; track g) {
+              <button class="db-gender-btn" [class.db-gender-active]="gender === g" (click)="gender = g">{{ g }}</button>
+            }
+          </div>
+        </div>
+
+        <label class="db-field-label">Describe your symptoms (Optional)</label>
+        <textarea class="db-textarea" placeholder="eg: Pain in joints, difficulty breathing, etc" [(ngModel)]="symptoms"></textarea>
+      </div>
+    </section>
+
+    <!-- Mode of consult -->
+    <section class="db-section">
+      <h3 class="db-section-title">Choose your mode of consult</h3>
+      <div class="db-mode-row">
+        <button class="db-mode-btn" [class.db-mode-active]="consultMode === 'audio'" (click)="consultMode = 'audio'">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+            <path stroke-linecap="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>
+          Audio Call
+          <span class="db-mode-radio" [class.db-radio-active]="consultMode === 'audio'"></span>
+        </button>
+        <button class="db-mode-btn" [class.db-mode-active]="consultMode === 'video'" (click)="consultMode = 'video'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+            <rect x="2" y="7" width="13" height="10" rx="2" stroke="currentColor"/>
+            <path d="M22 8.5l-5 3.5 5 3.5V8.5z" fill="currentColor"/>
+          </svg>
+          Video Call
+          <span class="db-mode-radio" [class.db-radio-active]="consultMode === 'video'"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Bill Summary -->
+    <section class="db-section db-bill-section">
+      <h3 class="db-section-title">Bill Summary</h3>
+      <div class="db-bill-card">
+        <div class="db-bill-row">
+          <span class="db-bill-label">Consultation Fee</span>
+          <span class="db-bill-val">&#8377;{{ doctor?.consultationFee | number:'1.0-0' }}</span>
+        </div>
+        @if (selectedSlot) {
+          <div class="db-bill-row">
+            <span class="db-bill-label">Selected Slot</span>
+            <span class="db-bill-val">{{ selectedSlot.display }}</span>
+          </div>
+        }
+        <div class="db-bill-divider"></div>
+        <div class="db-bill-row db-bill-total">
+          <span>Amount to be paid</span>
+          <span>&#8377;{{ doctor?.consultationFee | number:'1.0-0' }}</span>
+        </div>
+      </div>
+      <p class="db-legal-text">By proceeding, you agree to receive the consultation and consent to share your information with your doctor.</p>
+    </section>
+
+    <!-- Booking error -->
+    @if (bookingError) {
+      <div class="db-booking-error">{{ bookingError }}</div>
+    }
+
+  </div>
+
+  <!-- ── Sticky Pay Bar ── -->
+  <div class="db-pay-bar">
+    <button class="db-pay-btn" (click)="confirmBooking()" [disabled]="!selectedSlot || bookingLoading">
+      @if (bookingLoading) {
+        <span class="db-pay-spinner"></span> Processing...
+      } @else if (selectedSlot) {
+        Pay &#8377;{{ doctor?.consultationFee | number:'1.0-0' }} &amp; Confirm Booking
+      } @else {
+        Select a slot to proceed
+      }
+    </button>
+  </div>
+
+  } <!-- end else -->
+</div>

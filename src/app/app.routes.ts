@@ -1,3 +1,34 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home';
+import { ProductsComponent } from './products/products';
+import { ProductDetailComponent } from './product-detail/product-detail';
+import { CartComponent } from './cart/cart';
+import { CheckoutComponent } from './checkout/checkout';
+import { OrderSuccessComponent } from './order-success/order-success';
+import { HealthcareComponent } from './healthcare/healthcare';
+import { DoctorConsultComponent } from './doctor-consult/doctor-consult';
+import { DoctorBookingComponent } from './doctor-booking/doctor-booking';
+import { DoctorListComponent } from './doctor-list/doctor-list';
+import { PlusComponent } from './plus/plus';
+import { HealthInsightsComponent } from './health-insights/health-insights';
+import { BookingSuccessComponent } from './booking-success/booking-success';
+import { ProfileComponent } from './profile/profile';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: '',                component: HomeComponent },
+  { path: 'doctor-consult',       component: DoctorConsultComponent },
+  { path: 'doctor-booking/:id',   component: DoctorBookingComponent },
+  { path: 'doctor-booking',       component: DoctorBookingComponent },
+  { path: 'doctors',              component: DoctorListComponent },
+  { path: 'plus',             component: PlusComponent },
+  { path: 'health-insights',  component: HealthInsightsComponent },
+  { path: 'medicine',                component: ProductsComponent },
+  { path: 'healthcare',              component: HealthcareComponent },
+  { path: 'healthcare/:category',    component: ProductsComponent },
+  { path: 'product/:id',    component: ProductDetailComponent },
+  { path: 'cart',           component: CartComponent },
+  { path: 'checkout',       component: CheckoutComponent },
+  { path: 'order-success',    component: OrderSuccessComponent },
+  { path: 'booking-success',  component: BookingSuccessComponent },
+  { path: 'profile',          component: ProfileComponent },
+];

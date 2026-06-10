@@ -1,0 +1,316 @@
+<div class="cart-page">
+
+  <!-- Breadcrumb -->
+  <nav class="cart-breadcrumb">
+    <a routerLink="/" class="cart-bc-link">Home</a>
+    <span class="cart-bc-sep">&#8250;</span>
+    <span class="cart-bc-current">Cart</span>
+  </nav>
+
+  <!-- Not logged in -->
+  @if (!auth.isLoggedIn()) {
+    <div class="cart-login-prompt">
+      <p class="cart-login-icon">&#128722;</p>
+      <h2 class="cart-login-title">Please log in to view your cart</h2>
+      <p class="cart-login-sub">Your saved items will appear here after logging in.</p>
+      <button class="cart-login-btn" (click)="auth.openLogin()">Log in / Sign up</button>
+    </div>
+  } @else {
+
+    <div class="cart-layout">
+
+      <!-- ── Left: Cart items ── -->
+      <div class="cart-main">
+
+        <!-- Header card -->
+        <div class="cart-header-card">
+          @if (cartSvc.loading()) {
+            <h1 class="cart-item-count">Loading cart…</h1>
+          } @else {
+            <h1 class="cart-item-count">{{ items.length }} Item{{ items.length !== 1 ? 's' : '' }} in your Cart</h1>
+          }
+          <button class="saved-later-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            Saved for Later
+          </button>
+        </div>
+
+        <!-- Saved address display card -->
+        @if (addressSaved) {
+          <div class="cart-addr-display-card">
+            <div class="cart-addr-display-left">
+              <svg class="cart-addr-pin" width="20" height="20" viewBox="0 0 24 24" fill="#ef4444">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <div>
+                <p class="cart-addr-display-title">Deliver to {{ addrTypeLabel }} ({{ savedAddress.pincode }})</p>
+                <p class="cart-addr-display-text">{{ savedAddress.houseNo }}{{ savedAddress.streetName ? ', ' + savedAddress.streetName : '' }}</p>
+              </div>
+            </div>
+            <button class="cart-change-addr-btn" (click)="openChangeAddress()">Change Address</button>
+          </div>
+        }
+
+        <!-- Loading skeleton -->
+        @if (cartSvc.loading()) {
+          @for (n of [1,2]; track n) {
+            <div class="cart-item-card">
+              <div class="cart-skel-img skel-pulse"></div>
+              <div class="cart-item-body">
+                <div class="skel-pulse" style="height:16px;border-radius:6px;width:80%;margin-bottom:10px"></div>
+                <div class="skel-pulse" style="height:12px;border-radius:6px;width:40%;margin-bottom:16px"></div>
+                <div class="skel-pulse" style="height:28px;border-radius:6px;width:55%"></div>
+              </div>
+            </div>
+          }
+        } @else if (items.length > 0) {
+
+          <!-- Discount banner -->
+          @if (mrpDiscount > 0) {
+            <div class="cart-discount-banner">
+              <p class="banner-label">Max Discount Availed</p>
+              <p class="banner-value">
+                <span class="banner-coin">&#128315;</span>
+                &#8377;{{ totalSaved }} Saved on this order
+              </p>
+            </div>
+          }
+
+          <!-- Product cards -->
+          @for (item of items; track itemProductId(item)) {
+            <div class="cart-item-card">
+              <div class="cart-item-img" [style.background]="item.product?.image ? '#f9fafb' : '#fff5ee'">
+                @if (item.product?.image) {
+                  <img [src]="item.product.image" [alt]="item.product?.name" class="cart-item-img-real"
+                    (error)="$any($event.target).style.display='none'" />
+                } @else {
+                  &#128138;
+                }
+              </div>
+              <div class="cart-item-body">
+                <div class="cart-item-name-row">
+                  <a [routerLink]="['/product', itemProductId(item)]" class="cart-item-name">
+                    {{ item.product?.name }}
+                  </a>
+                  <button class="cart-delete-btn" (click)="removeItem(item)" aria-label="Remove item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+                  </button>
+                </div>
+                <p class="cart-item-sub">{{ item.product?.category?.categoryName }}</p>
+                <div class="cart-item-price-qty-row">
+                  <div class="cart-price-block">
+                    @if (itemDiscPct(item) > 0) {
+                      <span class="cart-item-mrp">&#8377;{{ item.product?.price | number:'1.2-2' }}</span>
+                    }
+                    <span class="cart-item-price">&#8377;{{ itemSalePrice(item) | number:'1.2-2' }}</span>
+                    @if (itemDiscPct(item) > 0) {
+                      <span class="cart-item-disc">{{ itemDiscPct(item) }}% OFF</span>
+                    }
+                  </div>
+                  <div class="cart-qty-wrap">
+                    <select class="cart-qty-select"
+                      [ngModel]="item.quantity"
+                      (ngModelChange)="onQtyChange(item, $event)">
+                      @for (n of [1,2,3,4,5,6,7,8,9,10]; track n) {
+                        <option [value]="n">Qty {{ n }}</option>
+                      }
+                    </select>
+                    <svg class="cart-qty-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </div>
+                <div class="cart-item-delivery">
+                  <span class="cart-bolt">&#9889;</span>
+                  Delivery by <strong>Tomorrow, 7:00 pm – 10:30 pm</strong>
+                </div>
+              </div>
+            </div>
+          }
+
+        } @else {
+          <div class="cart-empty">
+            <p class="cart-empty-icon">&#128722;</p>
+            <p class="cart-empty-text">Your cart is empty</p>
+            <a routerLink="/" class="cart-shop-btn">Continue Shopping</a>
+          </div>
+        }
+
+        <!-- Plus Member Banner -->
+        <div class="plus-banner">
+          <div class="plus-left">
+            <div class="plus-people-emoji">&#128106;</div>
+            <div class="plus-tagline">
+              <h3 class="plus-heading">Become a <span class="plus-icon">&#10010;</span> <span class="plus-word">Plus</span> Member</h3>
+              <p class="plus-sub">And enjoy extra bachat on every order</p>
+            </div>
+          </div>
+          <div class="plus-features">
+            <div class="plus-feature"><span class="plus-check">&#10004;</span>6% PharmEasy Credits on all medicine &amp; healthcare orders</div>
+            <div class="plus-feature"><span class="plus-check">&#10004;</span>20% PharmEasy Credits on all diagnostics orders</div>
+            <div class="plus-feature"><span class="plus-check">&#10004;</span>FREE* delivery on orders</div>
+          </div>
+          <button class="plus-explore-btn">Explore Now &#8594;</button>
+        </div>
+
+        <!-- Disclaimers -->
+        <ul class="cart-disclaimers">
+          <li>A licensed pharmacy would be delivering your order basis availability of product &amp; fastest delivery. <a href="#" class="disclaimer-link">Details</a></li>
+          <li>Prices are indicative and may change after billing.</li>
+          <li>PharmEasy is a technology platform to connect sellers and buyers and is not involved in sales of any product. For details read <a href="#" class="disclaimer-link">Terms and Conditions</a></li>
+        </ul>
+      </div>
+
+      <!-- ── Right: Sidebar ── -->
+      <div class="cart-sidebar">
+
+        <!-- Cart total + Action button -->
+        <div class="cart-side-card">
+          <div class="cart-total-row">
+            <span class="cart-total-label">Cart total:</span>
+            <span class="cart-total-amount">&#8377;{{ amountToPay | number:'1.2-2' }}</span>
+          </div>
+
+          @if (!addressSaved) {
+            <button class="cart-address-btn" (click)="addressPanelOpen = true">Add Delivery Address &#8594;</button>
+          } @else {
+            <a routerLink="/checkout" class="cart-address-btn cart-proceed-btn">Proceed To Buy &#8594;</a>
+          }
+
+          <div class="coupon-divider">
+            <span class="coupon-divider-text">COUPONS &amp; OFFERS</span>
+          </div>
+          <div class="explore-coupons-row">
+            <span>Apply a coupon</span>
+            <span class="explore-chev">&#8250;</span>
+          </div>
+        </div>
+
+        <!-- Bill Summary -->
+        <div class="bill-card">
+          <h3 class="bill-heading">Bill Summary</h3>
+          <div class="bill-row">
+            <span class="bill-label">MRP</span>
+            <span class="bill-val">&#8377;{{ totalMrp | number:'1.2-2' }}</span>
+          </div>
+          @if (mrpDiscount > 0) {
+            <div class="bill-row bill-discount-row">
+              <button class="bill-discount-toggle" (click)="showDiscountBreakup = !showDiscountBreakup">
+                Discount {{ showDiscountBreakup ? '&#8743;' : '&#8744;' }}
+              </button>
+              <span class="bill-val bill-val-discount">- &#8377;{{ mrpDiscount | number:'1.2-2' }}</span>
+            </div>
+            @if (showDiscountBreakup) {
+              <div class="discount-breakup-box">
+                <p class="breakup-title">Discount breakup</p>
+                <div class="breakup-row">
+                  <span class="breakup-link">MRP Discount</span>
+                  <span class="breakup-val">- &#8377;{{ mrpDiscount | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            }
+          }
+          <div class="bill-row">
+            <span class="bill-label">Discounted Value</span>
+            <span class="bill-val">&#8377;{{ totalSalePrice | number:'1.2-2' }}</span>
+          </div>
+          <div class="bill-row">
+            <span class="bill-label bill-label-link">Delivery Fee</span>
+            <span class="bill-val delivery-val">
+              <span class="delivery-strike">&#8377;{{ freeDeliverySaving }}.00</span>
+              <span class="delivery-free">FREE</span>
+            </span>
+          </div>
+          <div class="bill-row">
+            <span class="bill-label bill-label-link">Platform Fee</span>
+            <span class="bill-val">&#8377;{{ platformFee }}.00</span>
+          </div>
+          <hr class="bill-divider" />
+          <div class="bill-row bill-total-row">
+            <span class="bill-total-label">Amount to be paid</span>
+            <span class="bill-total-val">&#8377;{{ amountToPay | number:'1.2-2' }}</span>
+          </div>
+          @if (totalSaved > 0) {
+            <div class="bill-savings-bar">
+              <span class="savings-coin">&#128315;</span>
+              <span>&#8377;{{ totalSaved }} Saved on this order</span>
+              <span class="savings-chev">&#8250;</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  }
+
+  <!-- ── Address Slide-in Panel ── -->
+  @if (addressPanelOpen) {
+    <div class="addr-overlay" (click)="addressPanelOpen = false">
+      <div class="addr-panel" (click)="$event.stopPropagation()">
+
+        <div class="addr-header">
+          <button class="addr-back-btn" (click)="addressPanelOpen = false">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
+          <h2 class="addr-title">Select Address</h2>
+        </div>
+
+        <div class="addr-body">
+
+          <div class="addr-field">
+            <input type="text" id="deliverTo" class="addr-input" placeholder=" " [(ngModel)]="deliverTo" />
+            <label for="deliverTo" class="addr-label">Deliver to</label>
+          </div>
+
+          <div class="addr-field">
+            <input type="tel" id="mobileNo" class="addr-input" placeholder=" " [(ngModel)]="mobileNo" maxlength="10" />
+            <label for="mobileNo" class="addr-label">Mobile Number</label>
+            <p class="addr-helper">For all delivery related communication</p>
+          </div>
+
+          <div class="addr-field addr-field-pincode">
+            <input type="text" id="pincode" class="addr-input addr-input-pincode" placeholder=" " [(ngModel)]="pincode" maxlength="6" />
+            <label for="pincode" class="addr-label">Pincode</label>
+          </div>
+
+          <div class="addr-field">
+            <input type="text" id="houseNo" class="addr-input" placeholder=" " [(ngModel)]="houseNo" />
+            <label for="houseNo" class="addr-label">House number and building</label>
+          </div>
+
+          <div class="addr-field">
+            <input type="text" id="streetName" class="addr-input" placeholder=" " [(ngModel)]="streetName" />
+            <label for="streetName" class="addr-label">Street Name</label>
+          </div>
+
+          <div class="addr-type-section">
+            <p class="addr-type-label">Address Type <span class="addr-required">*</span></p>
+            <div class="addr-type-options">
+              <label class="addr-type-opt" [class.addr-type-active]="addressType === 'home'">
+                <input type="radio" name="addrType" value="home" [(ngModel)]="addressType" class="addr-type-radio" />
+                &#127968; Home
+              </label>
+              <label class="addr-type-opt" [class.addr-type-active]="addressType === 'work'">
+                <input type="radio" name="addrType" value="work" [(ngModel)]="addressType" class="addr-type-radio" />
+                &#127970; Work
+              </label>
+              <label class="addr-type-opt" [class.addr-type-active]="addressType === 'other'">
+                <input type="radio" name="addrType" value="other" [(ngModel)]="addressType" class="addr-type-radio" />
+                &#128205; Other
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="addr-footer">
+          <button class="addr-save-btn"
+            [class.addr-save-active]="addrFormValid"
+            (click)="saveAddress()">
+            Save and Continue
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

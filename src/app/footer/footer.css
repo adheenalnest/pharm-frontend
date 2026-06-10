@@ -1,0 +1,154 @@
+﻿.site-footer {
+  background: #eef4fb;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Link columns section */
+.footer-links-section {
+  padding: 48px 0 32px;
+}
+
+.footer-cols {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr 0.7fr;
+  gap: 48px;
+}
+
+.footer-col-heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 14px;
+}
+
+.footer-col-heading-gap {
+  margin-top: 24px;
+}
+
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-link {
+  font-size: 13px;
+  color: #374151;
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.footer-link:hover {
+  color: #10b981;
+}
+
+.footer-link-teal {
+  color: #059669;
+}
+
+.footer-link-teal:hover {
+  color: #047857;
+}
+
+.footer-explore-more {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #10b981;
+  text-decoration: none;
+}
+
+.footer-explore-more:hover {
+  color: #059669;
+}
+
+/* Social icons */
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  border-radius: 8px;
+  color: #374151;
+  transition: background 0.18s, color 0.18s;
+  text-decoration: none;
+}
+
+.footer-social-link:hover {
+  background: #10b981;
+  color: #fff;
+}
+
+.footer-social-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Bottom bar */
+.footer-bottom {
+  border-top: 1px solid #d1e8f0;
+  padding: 24px 0 28px;
+}
+
+.footer-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-payment {}
+
+.payment-heading {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 12px;
+}
+
+.payment-logos {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pay-logo {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 36px;
+}
+
+.footer-copyright {
+  font-size: 12.5px;
+  color: #6b7280;
+  margin: 0;
+}

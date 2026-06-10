@@ -1,0 +1,118 @@
+<div class="dl-page">
+
+  <div class="dl-inner">
+    <h1 class="dl-title">Select a Doctor</h1>
+
+    <!-- Loading / Error states -->
+    @if (loading) {
+      <!-- Skeleton cards instead of a blank spinner -->
+      <div class="dl-skeleton-list">
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="dl-skel-card">
+            <div class="dl-skel-row">
+              <div class="dl-skel-avatar skel-pulse"></div>
+              <div class="dl-skel-info">
+                <div class="dl-skel-line skel-pulse" style="width:60%"></div>
+                <div class="dl-skel-line skel-pulse" style="width:45%;margin-top:8px"></div>
+                <div class="dl-skel-line skel-pulse" style="width:80%;margin-top:8px"></div>
+              </div>
+            </div>
+            <div class="dl-skel-footer">
+              <div class="dl-skel-line skel-pulse" style="width:30%"></div>
+              <div class="dl-skel-btn skel-pulse"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (error) {
+      <div class="dl-error">
+        <p>{{ error }}</p>
+        <button class="dl-retry-btn" (click)="loadDoctors()">Retry</button>
+      </div>
+    } @else {
+
+    <!-- Quick connect card -->
+    @if (quickDocs.length > 0) {
+    <div class="dl-quick-card">
+      <div class="dl-quick-header">
+        <p class="dl-quick-label"><em>Doctor consult in</em> <span class="dl-mins-badge">7 mins</span></p>
+        <p class="dl-quick-sub">Connect with our top general physician</p>
+      </div>
+
+      <div class="dl-quick-wrap">
+        <button class="dl-quick-nav" (click)="scrollQuick('prev')">&#8249;</button>
+        <div class="dl-quick-track" #quickTrack>
+          @for (doc of quickDocs; track doc.doctorProfileId) {
+            <div class="dl-quick-doc">
+              @if (doc.image) {
+                <img [src]="doc.image" class="dl-quick-avatar-img" alt="Dr" (error)="doc.image = null" />
+              } @else {
+                <div class="dl-quick-avatar" [style.background]="doc.avatarBg">{{ doc.avatar }}</div>
+              }
+              <div class="dl-quick-info">
+                <p class="dl-quick-name">{{ doc.name }}</p>
+                <p class="dl-quick-exp">{{ doc.experience }} years of experience</p>
+                <p class="dl-quick-expertise">{{ doc.specialisation }}</p>
+              </div>
+            </div>
+          }
+        </div>
+        <button class="dl-quick-nav" (click)="scrollQuick('next')">&#8250;</button>
+      </div>
+
+      <div class="dl-quick-footer">
+        <div class="dl-quick-price-col">
+          <div class="dl-quick-price-row">
+            <span class="dl-quick-current">&#8377;{{ quickDocs[0]?.consultationFee }}</span>
+          </div>
+          <p class="dl-quick-cashback">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            Get 20% cashback with <span class="dl-plus-badge">&#9889; PLUS</span>
+          </p>
+        </div>
+        <button class="dl-consult-now-btn" (click)="goToBooking(quickDocs[0])">Consult Now &#9889;</button>
+      </div>
+    </div>
+    }
+
+    <!-- OR divider -->
+    <div class="dl-or-divider">
+      <span class="dl-or-text">OR</span>
+    </div>
+
+    <!-- Doctor list -->
+    <div class="dl-doctor-list">
+      @for (doc of doctors; track doc.doctorProfileId) {
+        <div class="dl-doctor-card">
+          <div class="dl-card-top">
+            @if (doc.image) {
+              <img [src]="doc.image" class="dl-card-avatar-img" alt="Dr" (error)="doc.image = null" />
+            } @else {
+              <div class="dl-card-avatar" [style.background]="doc.avatarBg">
+                <span class="dl-avatar-emoji">{{ doc.avatar }}</span>
+              </div>
+            }
+            <div class="dl-card-info">
+              <p class="dl-card-name">{{ doc.name }}</p>
+              <p class="dl-card-specialty">{{ doc.specialisation }}</p>
+              <p class="dl-card-meta">{{ doc.experience }} years exp. &bull; {{ doc.qualification }}</p>
+            </div>
+          </div>
+
+          <div class="dl-card-footer">
+            <div class="dl-price-col">
+              <span class="dl-price">&#8377;{{ doc.consultationFee | number:'1.0-0' }}</span>
+              <span class="dl-price-label">Consultation fee</span>
+            </div>
+            <div class="dl-action-col">
+              <button class="dl-select-slot-btn" (click)="goToBooking(doc)">Select Slot</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    } <!-- end else -->
+
+  </div>
+</div>

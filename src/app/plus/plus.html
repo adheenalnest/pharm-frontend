@@ -1,0 +1,182 @@
+<div class="plus-page">
+
+  <!-- ── Hero Banner ── -->
+  <section class="plus-hero">
+
+    <div class="plus-hero-left">
+      <h1 class="plus-hero-title">
+        PharmEasy
+        <span class="plus-cross-wrap">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="14" y="2" width="8" height="32" rx="4" fill="#f59e0b"/>
+            <rect x="2" y="14" width="32" height="8" rx="4" fill="#f59e0b"/>
+          </svg>
+        </span>
+        <span class="plus-word">Plus</span>
+      </h1>
+      <p class="plus-hero-sub">Reduce your medical expenses with Plus</p>
+      <div class="plus-savings-pill">Enjoy EXTRA savings on all orders.</div>
+      <p class="plus-access-label">Get exclusive access to</p>
+    </div>
+
+    <div class="plus-hero-right">
+      <div class="plus-blob plus-blob-1"></div>
+      <div class="plus-blob plus-blob-2"></div>
+      <div class="plus-family-wrap">
+        <div class="plus-speech-bubble">Start saving more! &#128526;</div>
+        <img src="\assests\insurance.jpg" alt="Family Health" class="plus-family-img">
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── Benefits card (overlaps hero) ── -->
+  <div class="plus-benefits-card">
+
+    <div class="plus-benefits-grid">
+
+      <div class="plus-benefit-item">
+        <div class="plus-benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="10" fill="#ede9fe"/>
+            <path d="M14 20h12M20 14v12" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="plus-benefit-text">
+          <p class="plus-benefit-title">Extra 6% PharmEasy Credits</p>
+          <p class="plus-benefit-desc">Applicable on medicines and healthcare products</p>
+        </div>
+      </div>
+
+      <div class="plus-benefit-item">
+        <div class="plus-benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="10" fill="#ede9fe"/>
+            <path d="M20 12l2.4 7.2H28l-5.2 3.6 2 6.2L20 25l-4.8 4 2-6.2L12 19.2h5.6L20 12z" fill="#7c3aed"/>
+          </svg>
+        </div>
+        <div class="plus-benefit-text">
+          <p class="plus-benefit-title">Extra 20% PharmEasy Credits</p>
+          <p class="plus-benefit-desc">Applicable on all lab tests</p>
+        </div>
+      </div>
+
+      <div class="plus-benefit-item">
+        <div class="plus-benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="10" fill="#dcfce7"/>
+            <path d="M10 20l6 6 14-14" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="plus-benefit-text">
+          <p class="plus-benefit-title">FREE Delivery</p>
+          <p class="plus-benefit-desc">Enjoy free delivery on medicine and healthcare orders above &#8377;499</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Additional Benefits -->
+    <div class="plus-additional">
+      <h3 class="plus-additional-heading">Additional Benefits</h3>
+      <div class="plus-additional-item">
+        <div class="plus-additional-icon">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="10" fill="#ede9fe"/>
+            <path d="M20 10v20M10 20h20" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="plus-additional-text">Extra 20% PharmEasy Credits on Doctor Consult and other Services</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Plan section ── -->
+  <section class="plus-plan-section">
+
+    <h2 class="plus-plan-heading">Plan for you</h2>
+
+    <div class="plus-plan-list">
+      @for (plan of plans; track plan.id) {
+        <div
+          class="plus-plan-card"
+          [class.plus-plan-active]="selectedPlan === plan.id"
+          (click)="selectedPlan = plan.id"
+        >
+          <div class="plus-plan-check" [class.plus-check-active]="selectedPlan === plan.id">
+            @if (selectedPlan === plan.id) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            }
+          </div>
+          <div class="plus-plan-info">
+            @if (plan.tag) {
+              <span class="plus-plan-tag">{{ plan.tag }}</span>
+            }
+            <span class="plus-plan-label">{{ plan.label }}</span>
+          </div>
+          <div class="plus-plan-price">
+            <span class="plus-plan-mrp">&#8377;{{ plan.mrp }}</span>
+            <span class="plus-plan-current">&#8377;{{ plan.price }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Apply coupon -->
+    <div class="plus-coupon-row" (click)="couponOpen = !couponOpen">
+      <div class="plus-coupon-left">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+          <path stroke-linecap="round" d="M7 7h.01M17 17h.01M9 9l6 6M7.8 3H5a2 2 0 00-2 2v2.8c0 .53.21 1.04.59 1.41l8.2 8.2c.78.78 2.05.78 2.83 0l4.17-4.17c.78-.78.78-2.05 0-2.83L10.21 3.59A2 2 0 008.8 3H7.8z"/>
+        </svg>
+        <span class="plus-coupon-text">Apply coupon</span>
+      </div>
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+      </svg>
+    </div>
+
+    @if (couponOpen) {
+      <div class="plus-coupon-input-row">
+        <input class="plus-coupon-input" type="text" placeholder="Enter coupon code" [(ngModel)]="couponCode">
+        <button class="plus-coupon-apply">Apply</button>
+      </div>
+    }
+
+    <!-- Divider -->
+    <hr class="plus-plan-divider">
+
+    <!-- CTA -->
+    <button class="plus-cta-btn">Get PharmEasy PLUS</button>
+
+    <p class="plus-legal">By subscribing, you agree to our <a href="#" class="plus-legal-link">Terms & Conditions</a> and <a href="#" class="plus-legal-link">Privacy Policy</a></p>
+
+  </section>
+
+  <!-- ── FAQ Section ── -->
+  <section class="plus-faq-section">
+    <h2 class="plus-faq-heading">Frequently Asked Questions</h2>
+    <div class="plus-faq-list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+        <div class="plus-faq-item" [class.plus-faq-open]="faq.open" (click)="toggleFaq(i)">
+          <div class="plus-faq-row">
+            <span class="plus-faq-q">{{ faq.q }}</span>
+            <svg class="plus-faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              @if (faq.open) {
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+              } @else {
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              }
+            </svg>
+          </div>
+          @if (faq.open) {
+            <p class="plus-faq-a">{{ faq.a }}</p>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+</div>

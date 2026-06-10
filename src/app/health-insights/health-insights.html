@@ -1,0 +1,66 @@
+<div class="hi-page">
+  <div class="hi-inner">
+
+    <h2 class="hi-heading">Latest Blogs</h2>
+
+    @if (loading) {
+      <div class="hi-grid">
+        @for (s of [1,2,3,4]; track s) {
+          <div class="hi-card hi-skel">
+            <div class="hi-img-wrap skel-pulse" style="height:180px;border-radius:12px 12px 0 0"></div>
+            <div class="hi-card-body">
+              <div class="skel-pulse" style="height:12px;border-radius:6px;margin-bottom:8px"></div>
+              <div class="skel-pulse" style="height:14px;border-radius:6px;margin-bottom:6px"></div>
+              <div class="skel-pulse" style="height:14px;border-radius:6px;width:70%"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (error) {
+      <div class="hi-error">
+        <p>{{ error }}</p>
+        <button class="hi-retry-btn" (click)="loadBlogs()">Retry</button>
+      </div>
+    } @else if (blogs.length === 0) {
+      <div class="hi-empty">
+        <p>No blogs published yet. Check back soon!</p>
+      </div>
+    } @else {
+      <div class="hi-grid">
+        @for (blog of blogs; track blog.id; let i = $index) {
+          <div class="hi-card">
+            <div class="hi-img-wrap" [style.background]="blog.image ? 'transparent' : blogBg(i)">
+              @if (blog.image) {
+                <img [src]="blog.image" [alt]="blog.blogName" class="hi-img" />
+              } @else {
+                <div class="hi-blog-icon">📰</div>
+              }
+              <div class="hi-watermark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#00a99d">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                </svg>
+                PharmEasy
+              </div>
+            </div>
+            <div class="hi-card-body">
+              <p class="hi-cats"><span class="hi-cat">HEALTH</span></p>
+              <h3 class="hi-title">{{ blog.blogName }}</h3>
+              @if (blog.blogContent) {
+                <p class="hi-excerpt">{{ excerpt(blog.blogContent) }}</p>
+              }
+              <p class="hi-date">{{ blog.createdAt | date:'mediumDate' }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (page < totalPages) {
+        <div class="hi-divider"></div>
+        <div class="hi-view-more-wrap">
+          <button class="hi-view-more-btn" (click)="loadMore()">View More</button>
+        </div>
+      }
+    }
+
+  </div>
+</div>

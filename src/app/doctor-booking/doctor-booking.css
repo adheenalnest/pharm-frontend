@@ -1,0 +1,621 @@
+.db-page {
+  min-height: 100vh;
+  background: #f9fafb;
+  padding-bottom: 80px;
+}
+
+/* ── Summary header ── */
+.db-summary-header {
+  background: linear-gradient(135deg, #0d2b4e, #1a4a7a);
+  padding: 28px 0 32px;
+}
+
+.db-summary-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.db-summary-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 18px;
+}
+
+.db-doc-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.db-doc-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  background: #e8f0fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  flex-shrink: 0;
+}
+
+.db-doc-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 3px;
+}
+
+.db-doc-specialty {
+  font-size: 13px;
+  color: #10b981;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.db-doc-meta {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 2px;
+}
+
+/* ── Body ── */
+.db-body {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Section ── */
+.db-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 20px;
+  margin-top: 16px;
+}
+
+.db-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 18px;
+}
+
+/* ── Date row ── */
+.db-date-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-bottom: 20px;
+}
+.db-date-row::-webkit-scrollbar { display: none; }
+
+.db-month-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 1px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.db-date-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.18s, background 0.18s;
+}
+.db-date-chip:hover { border-color: #10b981; }
+
+.db-date-active {
+  background: #1a3a5c;
+  border-color: #1a3a5c;
+  color: #fff;
+}
+.db-date-active .db-date-day,
+.db-date-active .db-date-num { color: #fff; }
+
+.db-date-day {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.db-date-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+/* ── Period blocks ── */
+.db-period-block {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 14px;
+  margin-top: 4px;
+}
+
+.db-period-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  font-family: inherit;
+}
+
+.db-period-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #10b981;
+}
+
+.db-period-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.db-slots-count {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.db-chevron {
+  transition: transform 0.2s;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+.db-chevron-up { transform: rotate(180deg); }
+
+/* ── Slots grid ── */
+.db-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.db-slot-btn {
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #111827;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.18s, background 0.18s, color 0.18s;
+}
+.db-slot-btn:hover { border-color: #10b981; color: #10b981; }
+
+.db-slot-active {
+  background: #0d6e5a;
+  border-color: #0d6e5a;
+  color: #fff !important;
+}
+
+.db-view-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #10b981;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0 10px;
+  font-family: inherit;
+}
+
+/* ── Patient section ── */
+.db-patient-section {
+  background: #edf5fb;
+  border-radius: 12px;
+  padding: 24px 20px;
+  margin-top: 16px;
+}
+
+.db-patient-sub {
+  font-size: 13px;
+  color: #10b981;
+  margin: -10px 0 16px;
+}
+
+.db-form { display: flex; flex-direction: column; gap: 12px; }
+
+.db-input {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.18s;
+  flex: 1;
+}
+.db-input:focus { border-color: #10b981; }
+.db-input::placeholder { color: #9ca3af; }
+
+.db-input-full { width: 100%; box-sizing: border-box; }
+.db-input-sm { flex: 0 0 120px; }
+
+.db-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.db-gender-row { display: flex; flex-direction: column; gap: 8px; }
+
+.db-gender-label, .db-field-label, .db-upload-label {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.db-gender-btns { display: flex; gap: 10px; }
+
+.db-gender-btn {
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  border-radius: 20px;
+  padding: 7px 22px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.18s, color 0.18s;
+}
+.db-gender-btn:hover { border-color: #10b981; }
+
+.db-gender-active {
+  border-color: #10b981;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.db-upload-box {
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.db-upload-plus {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #10b981;
+  color: #fff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.db-upload-hint { font-size: 12px; color: #6b7280; }
+
+.db-textarea {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  font-family: inherit;
+  outline: none;
+  resize: none;
+  height: 90px;
+  transition: border-color 0.18s;
+}
+.db-textarea:focus { border-color: #10b981; }
+.db-textarea::placeholder { color: #9ca3af; }
+
+/* ── Mode of consult ── */
+.db-mode-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.db-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.18s, background 0.18s;
+  position: relative;
+}
+.db-mode-btn:hover { border-color: #10b981; }
+
+.db-mode-active {
+  border-color: #10b981;
+  background: #f0fdf9;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.db-mode-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.db-radio-active {
+  border-color: #10b981;
+  box-shadow: inset 0 0 0 4px #fff, 0 0 0 2px #10b981;
+  background: #10b981;
+}
+
+/* ── Coupon ── */
+.db-coupon-row {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  padding: 4px 4px 4px 12px;
+}
+
+.db-coupon-icon { flex-shrink: 0; display: flex; align-items: center; }
+
+.db-coupon-input {
+  flex: 1;
+  border: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #374151;
+  font-family: inherit;
+  outline: none;
+  background: transparent;
+}
+.db-coupon-input::placeholder { color: #9ca3af; }
+
+.db-apply-btn {
+  background: none;
+  border: none;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px 14px;
+  font-family: inherit;
+  transition: color 0.18s;
+}
+.db-apply-btn:hover { color: #10b981; }
+
+/* ── Bill ── */
+.db-bill-section { margin-bottom: 0; }
+
+.db-bill-card {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.db-bill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+
+.db-bill-label { font-size: 14px; color: #6b7280; }
+.db-bill-val   { font-size: 14px; color: #111827; font-weight: 500; }
+.db-bill-green { color: #10b981; font-weight: 600; }
+
+.db-discount-toggle {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #6b7280;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.db-disc-caret { font-size: 11px; }
+
+.db-discount-breakup {
+  background: #f9fafb;
+  border-top: 1px dashed #e5e7eb;
+  border-bottom: 1px dashed #e5e7eb;
+  padding: 10px 16px;
+}
+
+.db-breakup-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 6px;
+}
+
+.db-breakup-label { font-size: 13px; color: #6b7280; }
+
+.db-bill-divider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 0 16px;
+}
+
+.db-bill-total {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.db-legal-text {
+  font-size: 12.5px;
+  color: #6b7280;
+  line-height: 1.65;
+  margin: 14px 0 0;
+}
+
+.db-legal-link { color: #10b981; text-decoration: none; font-weight: 600; }
+
+/* ── Sticky pay bar ── */
+.db-pay-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: #0d6e5a;
+  padding: 0;
+}
+
+.db-pay-btn {
+  width: 100%;
+  background: #0d6e5a;
+  color: #fff;
+  border: none;
+  padding: 18px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  transition: background 0.18s;
+}
+.db-pay-btn:hover { background: #0a5a4a; }
+.db-pay-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+/* ── Real doctor photo ── */
+.db-doc-avatar-img {
+  width: 60px; height: 60px;
+  border-radius: 50%; object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+.db-doc-fee {
+  font-size: 13px; color: #10b981;
+  font-weight: 600; margin: 4px 0 0;
+}
+
+/* ── Back link ── */
+.db-back-link {
+  background: none; border: none; color: rgba(255,255,255,0.8);
+  font-size: 13px; cursor: pointer; font-family: inherit;
+  padding: 0; margin-bottom: 12px; display: block;
+}
+.db-back-link:hover { color: #fff; }
+
+/* ── Loading / error ── */
+.db-loading {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 5rem 0; gap: 12px; color: #6b7280;
+}
+.db-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #e5e7eb; border-top-color: #10b981;
+  border-radius: 50%; animation: dbspin 0.8s linear infinite;
+}
+@keyframes dbspin { to { transform: rotate(360deg); } }
+.db-error-state {
+  padding: 3rem 1.5rem; text-align: center; color: #dc2626;
+}
+.db-back-btn {
+  margin-top: 1rem; padding: 10px 20px;
+  background: #10b981; color: #fff; border: none;
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  font-size: 14px;
+}
+
+/* ── No slots ── */
+.db-no-slots {
+  text-align: center; padding: 2rem 0; color: #6b7280;
+}
+.db-no-slots-sub { font-size: 13px; margin-top: 4px; }
+
+/* ── Slots loading ── */
+.db-slots-loading {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px; color: #6b7280; font-size: 13px;
+}
+.db-mini-spin {
+  width: 18px; height: 18px;
+  border: 2px solid #e5e7eb; border-top-color: #10b981;
+  border-radius: 50%; animation: dbspin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Booking error ── */
+.db-booking-error {
+  background: #fee2e2; color: #dc2626;
+  border-radius: 10px; padding: 12px 16px;
+  font-size: 13.5px; margin: 0 0 8px;
+}
+
+/* ── Pay spinner ── */
+.db-pay-spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: dbspin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* ── Slot count badge ── */
+.db-slots-count {
+  font-size: 12px; color: #10b981; font-weight: 600;
+  background: #d1fae5; padding: 2px 8px; border-radius: 12px;
+  margin-left: 8px;
+}

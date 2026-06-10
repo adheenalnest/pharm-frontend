@@ -1,0 +1,189 @@
+.os-page { min-height: 100vh; background: #f9fafb; }
+
+/* ── Navbar ── */
+.os-navbar { border-bottom: 1.5px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 100; }
+.os-nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+.os-logo { text-decoration: none; display: flex; flex-direction: column; line-height: 1; }
+.os-logo-tag { font-size: 11px; color: #10b981; font-style: italic; margin-bottom: 2px; }
+.os-logo-brand { display: flex; align-items: center; gap: 7px; }
+.os-logo-text { font-size: 20px; font-weight: 800; color: #10b981; }
+.os-home-link {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 15px; font-weight: 600; color: #374151;
+  text-decoration: none;
+}
+.os-home-link:hover { color: #10b981; }
+
+/* ── Layout ── */
+.os-layout { max-width: 1100px; margin: 0 auto; padding: 36px 24px 80px; display: flex; gap: 24px; align-items: flex-start; }
+.os-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.os-sidebar { flex: 0 0 300px; width: 300px; position: sticky; top: 80px; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── Success Banner ── */
+.os-success-banner {
+  background: linear-gradient(135deg, #065f46 0%, #0d9488 55%, #10b981 100%);
+  border-radius: 14px;
+  padding: 36px 32px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.os-banner-paid    { background: linear-gradient(135deg, #065f46 0%, #10b981 100%); }
+.os-banner-pending { background: linear-gradient(135deg, #92400e 0%, #f59e0b 100%); }
+
+.os-circles { position: absolute; inset: 0; pointer-events: none; }
+.os-circle {
+  position: absolute; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+}
+.os-c1 { width: 160px; height: 160px; }
+.os-c2 { width: 280px; height: 280px; }
+.os-c3 { width: 400px; height: 400px; }
+
+.os-icon-wrap { position: relative; z-index: 1; }
+.os-success-title { font-size: 22px; font-weight: 700; color: #fff; margin: 0; position: relative; z-index: 1; }
+.os-success-sub   { font-size: 13.5px; color: rgba(255,255,255,0.85); margin: 0; font-weight: 500; position: relative; z-index: 1; }
+
+/* ── Order Card ── */
+.os-order-card {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* ── Header rows (Order ID, Payment status, IDs) ── */
+.os-booking-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 22px; gap: 12px;
+}
+.os-booking-header { background: #f9fafb; }
+.os-booking-label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #6b7280; font-weight: 500; flex-shrink: 0;
+}
+.os-booking-val { font-size: 14px; color: #111827; font-weight: 600; text-align: right; }
+.os-booking-id  { color: #10b981; font-size: 15px; font-weight: 700; }
+.os-payment-id-val { font-size: 11.5px; color: #9ca3af; font-family: monospace; word-break: break-all; }
+.os-payment-badge {
+  padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700;
+}
+.os-paid    { background: #d1fae5; color: #065f46; }
+.os-pending { background: #fef3c7; color: #92400e; }
+
+.os-order-divider { border: none; border-top: 1px solid #f3f4f6; margin: 0; }
+
+/* ── Items section ── */
+.os-items-section { padding: 16px 22px 0; }
+.os-items-heading {
+  font-size: 11px; font-weight: 700; color: #9ca3af;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin: 0 0 14px;
+}
+
+.os-order-item-row {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 0 0 16px; margin-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.os-order-item-row:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+/* Product image box */
+.os-order-item-img {
+  flex: 0 0 80px; width: 80px; height: 80px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; overflow: hidden;
+}
+.os-order-item-img-real { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+
+/* Product info */
+.os-order-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+.os-order-item-name {
+  font-size: 14.5px; font-weight: 600; color: #111827;
+  margin: 0; line-height: 1.4;
+  white-space: normal;
+}
+.os-order-item-cat { font-size: 12px; color: #10b981; margin: 0; font-weight: 500; }
+.os-order-item-price-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.os-order-item-mrp   { font-size: 12px; color: #9ca3af; text-decoration: line-through; }
+.os-order-item-price { font-size: 15px; font-weight: 700; color: #111827; }
+.os-order-item-qty   {
+  font-size: 12px; color: #6b7280;
+  background: #f3f4f6; border-radius: 4px; padding: 1px 7px;
+}
+
+/* ── Bill summary ── */
+.os-bill-section {
+  padding: 14px 22px 18px;
+  border-top: 1px solid #f3f4f6;
+}
+.os-bill-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 0;
+}
+.os-bill-label    { font-size: 13.5px; color: #6b7280; }
+.os-bill-val      { font-size: 13.5px; color: #111827; font-weight: 500; }
+.os-bill-discount { color: #10b981; font-weight: 600; }
+.os-bill-free     { font-size: 13.5px; font-weight: 700; color: #10b981; }
+.os-bill-divider  { border: none; border-top: 1.5px solid #e5e7eb; margin: 8px 0; }
+.os-bill-total-row { padding: 8px 0 0; }
+.os-bill-total-label { font-size: 15px; font-weight: 700; color: #111827; }
+.os-bill-total-val   { font-size: 18px; font-weight: 800; color: #111827; }
+
+/* ── Loading spinner ── */
+.os-order-loading {
+  display: flex; align-items: center; gap: 12px;
+  padding: 24px 22px; color: #6b7280; font-size: 14px;
+}
+.os-order-spinner {
+  display: inline-block; width: 20px; height: 20px;
+  border: 2.5px solid #e5e7eb; border-top-color: #10b981;
+  border-radius: 50%; animation: os-spin 0.8s linear infinite; flex-shrink: 0;
+}
+@keyframes os-spin { to { transform: rotate(360deg); } }
+
+/* ── Booking details (doctor) ── */
+.os-mode-badge { background: #e0f2fe; color: #0369a1; padding: 3px 10px; border-radius: 20px; font-size: 13px; }
+.os-fee-row { background: #f0fdf9; }
+.os-fee-label { font-size: 15px; font-weight: 700; color: #111827; }
+.os-fee-val   { font-size: 18px; font-weight: 800; color: #10b981; }
+
+/* ── Savings pill (banner) ── */
+.os-savings-pill {
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px; padding: 12px 24px;
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 15px; font-weight: 700; color: #fff;
+  width: 100%; justify-content: center; box-sizing: border-box; position: relative; z-index: 1;
+}
+.os-savings-coin { font-size: 22px; }
+
+/* ── Pending note ── */
+.os-pending-note {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: #fffbeb; border: 1px solid #fde68a;
+  border-radius: 10px; padding: 14px 16px;
+  font-size: 13px; color: #92400e; line-height: 1.6;
+}
+
+/* ── Sidebar buttons ── */
+.os-go-home-btn {
+  display: block; width: 100%;
+  background: #0d6b57; color: #fff;
+  text-decoration: none; text-align: center;
+  border-radius: 10px; padding: 15px;
+  font-size: 15px; font-weight: 700;
+  transition: background 0.18s; box-sizing: border-box;
+}
+.os-go-home-btn:hover { background: #065f46; }
+.os-btn-outline { background: #fff; color: #0d6b57; border: 2px solid #0d6b57; }
+.os-btn-outline:hover { background: #f0fdf9; }

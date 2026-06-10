@@ -1,0 +1,198 @@
+<div class="pd-page">
+
+  <!-- ── Loading skeleton ── -->
+  @if (loading) {
+    <div class="pd-skeleton">
+      <div class="pd-skel-img skel-pulse"></div>
+      <div class="pd-skel-info">
+        <div class="skel-pulse" style="height:20px;border-radius:8px;margin-bottom:14px"></div>
+        <div class="skel-pulse" style="height:14px;border-radius:6px;width:60%;margin-bottom:10px"></div>
+        <div class="skel-pulse" style="height:32px;border-radius:6px;width:40%;margin-bottom:16px"></div>
+        <div class="skel-pulse" style="height:44px;border-radius:8px;width:200px"></div>
+      </div>
+    </div>
+  }
+
+  <!-- ── Error ── -->
+  @else if (error) {
+    <div class="pd-error">
+      <p>{{ error }}</p>
+      <a routerLink="/medicine" class="pd-back-link">← Back to Products</a>
+    </div>
+  }
+
+  <!-- ── Product loaded ── -->
+  @else if (product) {
+
+    <!-- Breadcrumb -->
+    <nav class="pd-breadcrumb">
+      <a routerLink="/" class="pd-bc-link">Home</a>
+      <span class="pd-bc-sep">&#8250;</span>
+      @if (product.category) {
+        <a routerLink="/healthcare" class="pd-bc-link">{{ product.category.categoryName }}</a>
+        <span class="pd-bc-sep">&#8250;</span>
+      }
+      <span class="pd-bc-current">{{ product.name }}</span>
+    </nav>
+
+    <!-- Top 3-column layout -->
+    <div class="pd-layout">
+
+      <!-- Left: Image -->
+      <div class="pd-gallery">
+        <div class="pd-main-img">
+          @if (product.image) {
+            <img [src]="product.image" [alt]="product.name" class="pd-main-img-real"
+              (error)="$any($event.target).style.display='none'" />
+          } @else {
+            <span class="pd-main-emoji">💊</span>
+          }
+        </div>
+        @if (product.category?.image) {
+          <div class="pd-thumbnails">
+            <button class="pd-thumb pd-thumb-active">
+              <img [src]="product.category.image" [alt]="product.category.categoryName"
+                style="width:100%;height:100%;object-fit:contain;border-radius:6px" />
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Middle: Product info -->
+      <div class="pd-info">
+        @if (product.category) {
+          <span class="pd-cat-badge">{{ product.category.categoryName }}</span>
+        }
+        <h1 class="pd-name">{{ product.name }}</h1>
+
+        @if (product.summary) {
+          <p class="pd-summary">{{ product.summary }}</p>
+        }
+
+        <!-- Price -->
+        <div class="pd-price-row">
+          <span class="pd-price">&#8377;{{ salePrice | number:'1.2-2' }}</span>
+          @if (discPct > 0) {
+            <span class="pd-mrp">MRP &#8377;{{ product.price | number:'1.2-2' }}</span>
+            <span class="pd-disc-ribbon">{{ discPct }}% OFF</span>
+          }
+        </div>
+        <p class="pd-tax-note">Inclusive of all taxes</p>
+
+        <!-- Delivery -->
+        <div class="pd-delivery-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          <span>Delivery by <strong>Tomorrow, 7:00 pm – 10:30 pm</strong></span>
+        </div>
+
+        <!-- Add to cart -->
+        @if (!inCart) {
+          <button class="pd-add-btn" (click)="addToCart()">Add To Cart</button>
+        } @else {
+          <div class="pd-qty-control">
+            <button class="pd-qty-btn" (click)="decrease()">&#8722;</button>
+            <span class="pd-qty-val">{{ quantity }}</span>
+            <button class="pd-qty-btn" (click)="increase()">&#43;</button>
+          </div>
+        }
+
+        <p class="pd-offer-note">*Offer applicable on order above &#8377;1000</p>
+      </div>
+
+      <!-- Right: Sidebar -->
+      <div class="pd-sidebar">
+        @if (inCart) {
+          <div class="pd-mini-card">
+            <p class="pd-mini-name">{{ product.name }}</p>
+            <div class="pd-mini-price-row">
+              <span class="pd-mini-price">&#8377;{{ salePrice | number:'1.2-2' }}</span>
+              @if (discPct > 0) {
+                <span class="pd-mini-mrp">MRP &#8377;{{ product.price | number:'1.2-2' }}</span>
+                <span class="pd-mini-ribbon">{{ discPct }}% OFF</span>
+              }
+              <button class="pd-mini-add-btn" (click)="increase()">Add</button>
+            </div>
+          </div>
+        }
+        <p class="pd-cart-msg">Please add item(s) to proceed</p>
+        <a routerLink="/cart" class="pd-view-cart-btn">View Cart &#8250;</a>
+        <div class="pd-offers-panel">
+          <div class="pd-offers-header">
+            <span class="pd-offers-title">Offers Just for you</span>
+          </div>
+          <div class="pd-offer-item">
+            <div class="pd-offer-icon">
+              <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#eef4fb"/><text x="14" y="19" font-size="13" font-family="sans-serif" text-anchor="middle" fill="#059669">Rx</text></svg>
+            </div>
+            <p class="pd-offer-text">Get extra 12% Off on Everherb, Liveasy or PharmEasy products</p>
+            <span class="pd-offer-chev">&#8250;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="pd-divider" />
+
+    <!-- ── Tabs for product details ── -->
+    <div class="pd-tabs-section">
+      <div class="pd-tabs-bar">
+        @for (tab of tabs; track tab.key) {
+          @if (product[tab.key]) {
+            <button class="pd-tab-btn" [class.pd-tab-active]="activeTab === tab.key"
+              (click)="activeTab = tab.key">
+              {{ tab.label }}
+            </button>
+          }
+        }
+      </div>
+
+      <div class="pd-tab-content">
+        <h3 class="pd-tab-heading">{{ activeTabLabel }}</h3>
+        <p class="pd-tab-text">{{ activeTabContent }}</p>
+      </div>
+    </div>
+
+    <hr class="pd-divider" />
+
+    <!-- ── Product Details Table ── -->
+    <div class="pd-content-wrap">
+      <h3 class="pd-section-heading">Product Details</h3>
+      <table class="pd-details-table">
+        @if (product.category) {
+          <tr>
+            <td class="pd-detail-label">Category</td>
+            <td class="pd-detail-val pd-detail-teal">{{ product.category.categoryName }}</td>
+          </tr>
+        }
+        @if (product.dosage) {
+          <tr>
+            <td class="pd-detail-label">Dosage</td>
+            <td class="pd-detail-val">{{ product.dosage }}</td>
+          </tr>
+        }
+        @if (product.modeOfAction) {
+          <tr>
+            <td class="pd-detail-label">Mode of Action</td>
+            <td class="pd-detail-val">{{ product.modeOfAction }}</td>
+          </tr>
+        }
+        @if (product.storageDisposal) {
+          <tr>
+            <td class="pd-detail-label">Storage &amp; Disposal</td>
+            <td class="pd-detail-val">{{ product.storageDisposal }}</td>
+          </tr>
+        }
+        <tr>
+          <td class="pd-detail-label">Country of Origin</td>
+          <td class="pd-detail-val">India</td>
+        </tr>
+      </table>
+    </div>
+
+  }
+
+</div>

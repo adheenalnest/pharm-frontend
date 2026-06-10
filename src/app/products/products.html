@@ -1,0 +1,146 @@
+<div class="products-page">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/">Home</a>
+    <span class="breadcrumb-sep">&#8250;</span>
+    <a [routerLink]="backLink">{{ backLink === '/healthcare' ? 'Healthcare' : 'Categories' }}</a>
+    <span class="breadcrumb-sep">&#8250;</span>
+    <span class="breadcrumb-current">{{ pageTitle }}</span>
+  </nav>
+
+  <div class="products-layout">
+
+    <!-- ── Left Filter Sidebar ── -->
+    <aside class="filter-sidebar">
+      <h2 class="filter-heading">Filter</h2>
+
+      <!-- Category filter -->
+      <p class="filter-section-title">Category</p>
+
+      @if (selectedCategory > 0) {
+        <!-- ── Active category: show only the selected one ── -->
+        <div class="filter-radio-row filter-active-cat">
+          <label class="filter-radio-label">
+            <input type="radio" class="filter-radio" name="cat" checked readonly />
+            {{ activeCategoryName }}
+          </label>
+        </div>
+        <button class="filter-clear-btn" (click)="clearCategory()">
+          &#8592; All Categories
+        </button>
+      } @else {
+        <!-- ── No filter: show full list ── -->
+        <div class="filter-radio-row">
+          <label class="filter-radio-label">
+            <input type="radio" class="filter-radio" name="cat"
+              [(ngModel)]="selectedCategory" [value]="0"
+              (ngModelChange)="onCategoryChange($event)" />
+            All
+          </label>
+        </div>
+        @for (cat of categories; track cat.id) {
+          <div class="filter-radio-row">
+            <label class="filter-radio-label">
+              <input type="radio" class="filter-radio" name="cat"
+                [(ngModel)]="selectedCategory" [value]="cat.id"
+                (ngModelChange)="onCategoryChange($event)" />
+              {{ cat.categoryName }}
+            </label>
+          </div>
+        }
+      }
+
+      <hr class="filter-divider" />
+
+      <!-- Search within page -->
+      <p class="filter-section-title">Search</p>
+      <div class="brand-search-wrap">
+        <svg class="brand-search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" class="brand-search-input" placeholder="Search products…" [(ngModel)]="searchQuery" />
+      </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="products-main">
+
+      <!-- Top row: heading + sort -->
+      <div class="products-top-row">
+        <h1 class="products-heading">{{ pageTitle }}</h1>
+        <div class="sort-wrap">
+          <span>Sort By:</span>
+          <select class="sort-select" [(ngModel)]="sortBy">
+            <option value="popularity">Popularity</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="discount">Discount</option>
+          </select>
+        </div>
+      </div>
+
+      @if (loading) {
+        <div class="products-grid">
+          @for (s of [1,2,3,4,5,6]; track s) {
+            <div class="product-card prod-skel">
+              <div class="product-img skel-pulse"></div>
+              <div style="padding:12px">
+                <div class="skel-pulse" style="height:12px;border-radius:6px;margin-bottom:8px"></div>
+                <div class="skel-pulse" style="height:10px;border-radius:6px;width:60%"></div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (error) {
+        <div class="prod-error">
+          <p>{{ error }}</p>
+          <button (click)="loadProducts()">Retry</button>
+        </div>
+      } @else if (products.length === 0) {
+        <div class="prod-empty">
+          <p>No products found{{ selectedCategory > 0 ? ' in this category' : '' }}.</p>
+        </div>
+      } @else {
+        <div class="products-grid">
+          @for (p of products; track p.id) {
+            <a class="product-card" [routerLink]="['/product', p.id]">
+              @if (p.image) {
+                <img [src]="p.image" [alt]="p.name" class="product-img product-img-real"
+                  (error)="$any($event.target).style.display='none'" />
+              } @else {
+                <div class="product-img">💊</div>
+              }
+              <div class="product-info">
+                <p class="product-name">{{ p.name }}</p>
+                @if (p.categoryId) {
+                  <p class="product-cat">{{ categoryName(p.categoryId) }}</p>
+                }
+                <div class="product-price-row">
+                  <span class="product-mrp">MRP &#8377;{{ p.price | number:'1.2-2' }}</span>
+                  @if (discPct(p) > 0) {
+                    <span class="disc-ribbon">{{ discPct(p) }}% OFF</span>
+                  }
+                </div>
+                <p class="product-sale-price">
+                  &#8377;{{ (p.discountedPrice > 0 ? p.discountedPrice : p.price) | number:'1.2-2' }}
+                </p>
+              </div>
+            </a>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1) {
+          <div class="prod-pagination">
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8249; Prev</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next &#8250;</button>
+          </div>
+        }
+      }
+
+    </main>
+  </div>
+</div>

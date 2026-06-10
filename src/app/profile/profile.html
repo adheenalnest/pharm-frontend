@@ -1,0 +1,233 @@
+<div class="pf-page">
+
+  <!-- Navbar spacer -->
+  <div class="pf-top-bar">
+    <a routerLink="/" class="pf-back-link">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+      </svg>
+      Back to Home
+    </a>
+    <span class="pf-breadcrumb">My Profile</span>
+  </div>
+
+  <div class="pf-layout">
+
+    <!-- ── Main Column ── -->
+    <div class="pf-main">
+
+      <!-- Loading -->
+      @if (loading) {
+        <div class="pf-card pf-loading-card">
+          <div class="pf-spinner"></div>
+          <span>Loading profile…</span>
+        </div>
+      }
+
+      <!-- Error -->
+      @if (!loading && error) {
+        <div class="pf-error-card">
+          <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#ef4444" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 8v4m0 4h.01"/></svg>
+          <p class="pf-error-title">Could Not Load Profile</p>
+          <p class="pf-error-msg">{{ error }}</p>
+          <button class="pf-retry-btn" (click)="load()">Try Again</button>
+        </div>
+      }
+
+      <!-- Success toast -->
+      @if (saveMsg) {
+        <div class="pf-alert pf-alert-success">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          {{ saveMsg }}
+        </div>
+      }
+
+      <!-- Complete Profile Banner (isNew) -->
+      @if (!loading && isNew && !editMode) {
+        <div class="pf-banner-incomplete">
+          <svg width="22" height="22" fill="none" stroke="#f59e0b" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <div class="pf-banner-text">
+            <strong>Complete your profile</strong>
+            <span>Add your name and phone number to get a personalised experience.</span>
+          </div>
+          <button class="pf-banner-btn" (click)="openEdit()">Complete Now</button>
+        </div>
+      }
+
+      <!-- Profile Card -->
+      @if (!loading && user) {
+        <div class="pf-card">
+
+          <!-- Header: avatar + name + role -->
+          <div class="pf-card-header">
+            <div class="pf-avatar">{{ initials }}</div>
+            <div class="pf-header-info">
+              <h2 class="pf-name">{{ user.name || 'No name set' }}</h2>
+              <span class="pf-role-badge" [class.pf-role-admin]="isAdmin">{{ user.role }}</span>
+              <p class="pf-member-since">Member since {{ memberSince }}</p>
+            </div>
+            @if (!editMode) {
+              <button class="pf-edit-btn" (click)="openEdit()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Edit Profile
+              </button>
+            }
+          </div>
+
+          <div class="pf-card-divider"></div>
+
+          <!-- Info rows (view mode) -->
+          @if (!editMode) {
+            <div class="pf-info-grid">
+
+              <div class="pf-info-row">
+                <div class="pf-info-icon">
+                  <svg width="18" height="18" fill="none" stroke="#10b981" viewBox="0 0 24 24" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div class="pf-info-content">
+                  <span class="pf-info-label">Email Address</span>
+                  <span class="pf-info-value">{{ user.email }}</span>
+                </div>
+                <span class="pf-info-badge">Verified</span>
+              </div>
+
+              <div class="pf-info-row">
+                <div class="pf-info-icon">
+                  <svg width="18" height="18" fill="none" stroke="#10b981" viewBox="0 0 24 24" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                </div>
+                <div class="pf-info-content">
+                  <span class="pf-info-label">Phone Number</span>
+                  <span class="pf-info-value" [class.pf-info-empty]="!user.phone">
+                    {{ user.phone || 'Not added yet' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="pf-info-row">
+                <div class="pf-info-icon">
+                  <svg width="18" height="18" fill="none" stroke="#10b981" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </div>
+                <div class="pf-info-content">
+                  <span class="pf-info-label">Full Name</span>
+                  <span class="pf-info-value" [class.pf-info-empty]="!user.name">
+                    {{ user.name || 'Not added yet' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="pf-info-row">
+                <div class="pf-info-icon">
+                  <svg width="18" height="18" fill="none" stroke="#10b981" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="pf-info-content">
+                  <span class="pf-info-label">Account Created</span>
+                  <span class="pf-info-value">{{ memberSince }}</span>
+                </div>
+              </div>
+
+            </div>
+          }
+
+          <!-- Edit form -->
+          @if (editMode) {
+            <form class="pf-form" (ngSubmit)="save()">
+
+              <div class="pf-form-group">
+                <label class="pf-label" for="pf-name">Full Name</label>
+                <input id="pf-name" type="text" class="pf-input" [(ngModel)]="nameInput" name="name"
+                  placeholder="Enter your full name" autocomplete="name" />
+              </div>
+
+              <div class="pf-form-group">
+                <label class="pf-label" for="pf-phone">Phone Number</label>
+                <div class="pf-phone-wrap">
+                  <span class="pf-phone-prefix">+91</span>
+                  <input id="pf-phone" type="tel" class="pf-input pf-phone-input" [(ngModel)]="phoneInput" name="phone"
+                    placeholder="10-digit mobile number" maxlength="10" autocomplete="tel" />
+                </div>
+              </div>
+
+              @if (error) {
+                <p class="pf-form-error">{{ error }}</p>
+              }
+
+              <div class="pf-form-actions">
+                <button type="submit" class="pf-save-btn" [disabled]="saving">
+                  @if (saving) {
+                    <span class="pf-btn-spinner"></span> Saving…
+                  } @else {
+                    Save Changes
+                  }
+                </button>
+                <button type="button" class="pf-cancel-btn" (click)="cancelEdit()" [disabled]="saving">
+                  Cancel
+                </button>
+              </div>
+
+            </form>
+          }
+
+        </div>
+      }
+
+    </div>
+
+    <!-- ── Sidebar ── -->
+    <div class="pf-sidebar">
+
+      <div class="pf-sidebar-card">
+        <p class="pf-sidebar-heading">Quick Links</p>
+        <ul class="pf-sidebar-links">
+          <li>
+            <a routerLink="/cart" class="pf-sidebar-link">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.63.63-.18 1.7.7 1.7H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              My Cart
+            </a>
+          </li>
+          <li>
+            <a routerLink="/medicine" class="pf-sidebar-link">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              Order Medicines
+            </a>
+          </li>
+          <li>
+            <a routerLink="/doctor-consult" class="pf-sidebar-link">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              Consult Doctor
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="pf-sidebar-card pf-account-info">
+        <p class="pf-sidebar-heading">Account</p>
+        <div class="pf-account-row">
+          <span class="pf-account-label">Email</span>
+          <span class="pf-account-val">{{ user?.email }}</span>
+        </div>
+        <div class="pf-account-row">
+          <span class="pf-account-label">Role</span>
+          <span class="pf-account-val">{{ user?.role }}</span>
+        </div>
+        <div class="pf-account-row">
+          <span class="pf-account-label">Status</span>
+          <span class="pf-account-val" [class.pf-status-complete]="!isNew" [class.pf-status-new]="isNew">
+            {{ isNew ? 'Incomplete' : 'Complete' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <button class="pf-logout-btn" (click)="logout()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,315 @@
+<div class="dc-page">
+
+  <!-- Breadcrumb -->
+  <div class="dc-breadcrumb">
+    <a routerLink="/" class="dc-bc-link">Home</a>
+    <span class="dc-bc-sep">&#8250;</span>
+    <span class="dc-bc-current">Online Doctor Consultation</span>
+  </div>
+
+  <!-- ── Hero Banner ── -->
+  <section class="dc-hero">
+    <div class="dc-hero-left">
+      <div class="dc-brand-badge">
+        <div class="dc-brand-icon">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#1a4a7a"/>
+            <path d="M16 8v16M8 16h16" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="dc-brand-name">Doctor Consult</div>
+          <div class="dc-brand-sub">by PharmEasy</div>
+        </div>
+      </div>
+      <h1 class="dc-hero-title">
+        <span class="dc-title-yellow">Consult Certified Doctors</span><br>
+        Online &#8211; 24/7 Access
+      </h1>
+      <p class="dc-hero-sub">Video/Audio call &bull; Starting at just &#8377;199</p>
+      <button class="dc-consult-btn" (click)="firstDoctorId ? consultDoctor(firstDoctorId) : null">Consult now</button>
+      <div class="dc-trust-row">
+        <div class="dc-trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          <span>Private and Secure sessions</span>
+        </div>
+        <div class="dc-trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>
+          <span>Free follow up &amp; Cancellation</span>
+        </div>
+      </div>
+    </div>
+    <div class="dc-hero-right">
+      <div class="dc-circle-bg dc-circle-1"></div>
+      <div class="dc-circle-bg dc-circle-2"></div>
+      <img src="/assests/doctor-banner-image.png" alt="Doctors" class="dc-doctor-img">
+    </div>
+  </section>
+
+  <!-- ── Stats bar ── -->
+  <div class="dc-stats-bar">
+    <div class="dc-stat-item">
+      <span class="dc-stat-laurel">&#10070;</span>
+      <div class="dc-stat-text">
+        <span class="dc-stat-num">40+</span>
+        <span class="dc-stat-label">Certified<br>Doctors</span>
+      </div>
+      <span class="dc-stat-laurel">&#10070;</span>
+    </div>
+    <div class="dc-stat-divider"></div>
+    <div class="dc-stat-item">
+      <span class="dc-stat-laurel">&#10070;</span>
+      <div class="dc-stat-text">
+        <span class="dc-stat-num">50K+</span>
+        <span class="dc-stat-label">Successful<br>Consultations</span>
+      </div>
+      <span class="dc-stat-laurel">&#10070;</span>
+    </div>
+    <div class="dc-stat-divider"></div>
+    <div class="dc-stat-item">
+      <span class="dc-stat-laurel">&#10070;</span>
+      <div class="dc-stat-text">
+        <span class="dc-stat-star">&#9733;</span>
+        <span class="dc-stat-num">4.8/5</span>
+        <span class="dc-stat-label">12K+ Patients</span>
+      </div>
+      <span class="dc-stat-laurel">&#10070;</span>
+    </div>
+  </div>
+
+  <!-- ── Specialities section ── -->
+  <section class="dc-spec-section">
+    <div class="dc-spec-header">
+      <h2 class="dc-spec-title">20+ Specialities</h2>
+      <button class="dc-view-all-btn">View all Specialities</button>
+    </div>
+    <div class="dc-spec-wrap">
+      <button class="dc-spec-nav" (click)="scrollSpec('prev')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <div class="dc-spec-track" #specTrack>
+        @if (specLoading) {
+          @for (s of [1,2,3,4]; track s) {
+            <div class="dc-spec-card dc-spec-skel">
+              <div class="dc-spec-avatar skel-pulse"></div>
+              <div class="dc-spec-info">
+                <div class="skel-pulse" style="height:13px;border-radius:6px;margin-bottom:6px"></div>
+                <div class="skel-pulse" style="height:11px;border-radius:6px;width:70%"></div>
+              </div>
+            </div>
+          }
+        } @else {
+          @for (spec of specialities; track spec.name) {
+            <div class="dc-spec-card">
+              <div class="dc-spec-avatar" [style.background]="spec.bg">
+                @if (spec.avatar.startsWith('http')) {
+                  <img [src]="spec.avatar" [alt]="spec.name" class="dc-spec-img"
+                    (error)="$any($event.target).style.display='none'" />
+                } @else {
+                  <span class="dc-spec-emoji">{{ spec.avatar }}</span>
+                }
+              </div>
+              <div class="dc-spec-info">
+                <p class="dc-spec-name">{{ spec.name }}</p>
+                <p class="dc-spec-issues">{{ spec.issues }}</p>
+              </div>
+            </div>
+          }
+        }
+      </div>
+      <button class="dc-spec-nav" (click)="scrollSpec('next')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Top Doctors ── -->
+  <section class="dc-doctors-section">
+    <div class="dc-section-header">
+      <h2 class="dc-section-title">Top Doctors Available</h2>
+      <a routerLink="/doctors" class="dc-view-all-btn">View all Doctors</a>
+    </div>
+    <div class="dc-doctors-wrap">
+      <button class="dc-spec-nav" (click)="scrollDoctors('prev')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <div class="dc-doctor-track" #doctorTrack>
+        @if (doctorsLoading) {
+          @for (i of [1,2,3]; track i) {
+            <div class="dc-skel-card">
+              <div class="dc-skel-exp skel-pulse"></div>
+              <div class="dc-skel-body">
+                <div class="dc-skel-avatar skel-pulse"></div>
+                <div class="dc-skel-lines">
+                  <div class="dc-skel-line skel-pulse" style="width:70%"></div>
+                  <div class="dc-skel-line skel-pulse" style="width:55%;margin-top:7px"></div>
+                  <div class="dc-skel-line skel-pulse" style="width:85%;margin-top:7px"></div>
+                </div>
+              </div>
+              <div class="dc-skel-footer">
+                <div class="dc-skel-line skel-pulse" style="width:40%"></div>
+                <div class="dc-skel-btn skel-pulse"></div>
+              </div>
+            </div>
+          }
+        } @else if (doctorsError) {
+          <div class="dc-doc-loading">
+            <span style="color:#dc2626;font-size:13px">{{ doctorsError }}</span>
+            <button class="dc-retry-btn" (click)="loadDoctors()">Retry</button>
+          </div>
+        }
+        @for (doc of doctors; track doc.doctorProfileId) {
+          <div class="dc-doctor-card">
+            <div class="dc-doc-exp-bar">{{ doc.experience }} years experience</div>
+            <div class="dc-doc-body">
+              @if (doc.image) {
+                <img [src]="doc.image" class="dc-doc-avatar-img" alt="Dr" (error)="doc.image = null" />
+              } @else {
+                <div class="dc-doc-avatar" [style.background]="doc.avatarBg">
+                  <span class="dc-doc-emoji">{{ doc.avatar }}</span>
+                  <span class="dc-doc-verified">&#10003;</span>
+                </div>
+              }
+              <div class="dc-doc-info">
+                <p class="dc-doc-name">{{ doc.name }}</p>
+                <p class="dc-doc-specialty">{{ doc.specialisation }}</p>
+                <p class="dc-doc-degree">{{ doc.qualification }}</p>
+                <p class="dc-doc-exp-text">Expertise in:</p>
+                <p class="dc-doc-expertise">{{ doc.specialisation }}</p>
+              </div>
+            </div>
+            <div class="dc-doc-footer">
+              <div class="dc-doc-price">
+                <span class="dc-doc-current">&#8377;{{ doc.consultationFee }}</span>
+              </div>
+              <button class="dc-doc-consult-btn" (click)="consultDoctor(doc.doctorProfileId, doc)">Consult now</button>
+            </div>
+          </div>
+        }
+      </div>
+      <button class="dc-spec-nav" (click)="scrollDoctors('next')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── How to book ── -->
+  <section class="dc-how-section">
+    <h2 class="dc-section-title" style="margin-bottom:28px">How to book doctor consult</h2>
+    <div class="dc-how-steps">
+      @for (step of howSteps; track step.num; let last = $last) {
+        <div class="dc-how-card">
+          <div class="dc-how-num-wrap">
+            <div class="dc-how-circle">
+              <span class="dc-how-icon">{{ step.icon }}</span>
+            </div>
+            <span class="dc-how-num">{{ step.num }}</span>
+          </div>
+          <p class="dc-how-title">{{ step.title }}</p>
+          <p class="dc-how-desc">{{ step.desc }}</p>
+        </div>
+        @if (!last) {
+          <div class="dc-how-connector"></div>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- ── Why choose us ── -->
+  <section class="dc-why-section">
+    <div class="dc-why-card-wrap">
+      <h2 class="dc-why-heading">
+        Why choose us
+        <span class="dc-why-line"></span>
+      </h2>
+      <div class="dc-why-grid-top">
+        @for (card of whyCards.slice(0,3); track card.title) {
+          <div class="dc-why-item">
+            <div class="dc-why-content">
+              <p class="dc-why-title">{{ card.title }}</p>
+              <p class="dc-why-desc">{{ card.desc }}</p>
+            </div>
+            <div class="dc-why-icon-wrap" [style.background]="card.bg">
+              <span class="dc-why-icon">{{ card.icon }}</span>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="dc-why-grid-bottom">
+        @for (card of whyCards.slice(3); track card.title) {
+          <div class="dc-why-item dc-why-item-wide">
+            <div class="dc-why-icon-wrap dc-why-icon-left" [style.background]="card.bg">
+              <span class="dc-why-icon">{{ card.icon }}</span>
+            </div>
+            <div class="dc-why-content">
+              <p class="dc-why-title">{{ card.title }}</p>
+              <p class="dc-why-desc">{{ card.desc }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── What is Online Doctor Consultation ── -->
+  <section class="dc-seo-section">
+    <h2 class="dc-seo-h2">What is Online Doctor Consultation?</h2>
+    <p class="dc-seo-p">Online doctor consultation allows individuals to connect with qualified healthcare professionals through video calls, chat or voice services. It offers access to medical advice, diagnosis and follow-up care when in-person visit is not feasible due to distance or time constraints. Anyone with a phone or internet connection can use it, including people seeking routine care, follow-up consultations or help for common conditions like allergies, acne, infections, digestive issues and more.</p>
+
+    <h3 class="dc-seo-h3">Specialists Available for Consultation</h3>
+    <div class="dc-specialist-list">
+      <div class="dc-specialist-item"><strong>Dermatologist:</strong> Expert for Skin, hair and nail concerns such as acne, rashes, pigmentation, infections.</div>
+      <div class="dc-specialist-item"><strong>General Medicine:</strong> Specialised to manage Fever, infections, lifestyle diseases, routine medical advice.</div>
+      <div class="dc-specialist-item"><strong>Pediatrician:</strong> Specialist in diagnosing and treating medical conditions in infants, children, and adolescents, including growth, development, infections, and childhood illnesses.</div>
+      <div class="dc-specialist-item"><strong>Gynecologist:</strong> Expert in women's reproductive health, managing menstrual disorders, pregnancy-related issues, hormonal problems, and conditions of the uterus and ovaries.</div>
+      <div class="dc-specialist-item"><strong>Psychiatrist:</strong> Specialist in diagnosing and treating mental health conditions such as depression, anxiety, mood disorders, and behavioural disorders through therapy and medication.</div>
+      <div class="dc-specialist-item"><strong>ENT:</strong> Expert in treating conditions related to the ear, nose, and throat, including infections, hearing issues, sinus problems, and voice disorders.</div>
+      <div class="dc-specialist-item"><strong>Cardiologist:</strong> Specialist in diagnosing and managing heart-related conditions such as hypertension, heart disease, rhythm disorders, and heart failure.</div>
+      <div class="dc-specialist-item"><strong>Endocrinologist:</strong> Expert in hormonal disorders including diabetes, PCOD, thyroid diseases, metabolic disorders etc.</div>
+    </div>
+
+    <h3 class="dc-seo-h3">Online Consultation vs. In-Person Visit</h3>
+    <table class="dc-compare-table">
+      <thead>
+        <tr>
+          <th class="dc-th">Features</th>
+          <th class="dc-th">Online Consultation</th>
+          <th class="dc-th">In-Person Visit</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of compareRows; track row.feature) {
+          <tr class="dc-tr">
+            <td class="dc-td dc-td-feature">{{ row.feature }}</td>
+            <td class="dc-td dc-td-online">{{ row.online }}</td>
+            <td class="dc-td dc-td-inperson">{{ row.inPerson }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── CTA Banner ── -->
+  <section class="dc-cta-banner">
+    <div class="dc-cta-left">
+      <h3 class="dc-cta-title">Consult a Doctor online Anytime, Anywhere.</h3>
+      <p class="dc-cta-sub">Starting at just INR 199</p>
+    </div>
+    <div class="dc-cta-right">
+      <img src="/assests/doctor-banner-image.png" alt="Doctors" class="dc-cta-img">
+    </div>
+  </section>
+
+</div>
