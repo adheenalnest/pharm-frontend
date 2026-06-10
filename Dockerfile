@@ -16,17 +16,25 @@ ENV HTTP_PROXY=${HTTP_PROXY}
 ENV HTTPS_PROXY=${HTTPS_PROXY}
 ENV NO_PROXY=${NO_PROXY}
 
+# Give Node more heap space to prevent OOM kills during npm install
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+
 WORKDIR /app
 COPY package*.json ./
 
-# Configure npm for corporate network: retries, timeouts, and trust Sophos CA
+# Configure npm for corporate network in a separate layer (cached independently)
 RUN npm config set cafile /usr/local/corporate-ca.pem \
     && npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set fetch-retry-maxtimeout 120000 \
     && npm config set fetch-timeout 300000 \
-    && if [ -n "$HTTPS_PROXY" ]; then npm config set proxy "$HTTP_PROXY" && npm config set https-proxy "$HTTPS_PROXY"; fi \
-    && npm ci
+    && if [ -n "$HTTPS_PROXY" ]; then \
+         npm config set proxy "$HTTP_PROXY" && npm config set https-proxy "$HTTPS_PROXY"; \
+       fi
+
+# Install dependencies — use npm install (more resilient than npm ci under proxy/TLS inspection)
+# npm ci triggers a known "Exit handler never called" bug under certain proxy+TLS conditions
+RUN npm install --prefer-offline --no-audit --no-fund
 
 COPY . .
 RUN npm run build
